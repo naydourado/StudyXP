@@ -25,3 +25,17 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+# funcao responsavel por abrir e fechar a conexão com o banco
+def get_db():
+
+    # cria uma sessão de conexão com o mysql
+    db = SessionLocal()
+
+    try:
+        # disponibiliza a conexão para a rota usar
+        yield db
+
+    finally:
+        # fecha a conexão ao terminar
+        db.close()
