@@ -65,3 +65,37 @@ class TarefaResponse(TarefaBase):
         # permite converter model sqlalchemy
         # em schema pydantic automaticamente
         from_attributes = True
+
+
+# schema usado para editar tarefa
+class TarefaUpdate(BaseModel):
+
+    # titulo opcional
+    titulo: str | None = None
+
+    # descricao opcional
+    descricao: str | None = None
+
+    # prioridade opcional
+    prioridade: str | None = None
+
+    # xp opcional
+    xp_recompensa: int | None = None
+
+
+class HumorBase(BaseModel):
+    humor: str
+    observacao: str | None = None
+
+
+class HumorCreate(HumorBase):
+    pass
+
+
+class HumorResponse(HumorBase):
+    id: int
+    data_registro: datetime
+    usuario_id: int
+
+    class Config:
+        from_attributes = True

@@ -1,7 +1,16 @@
+from passlib.context import CryptContext
+from jose import jwt, JWTError
+from datetime import datetime, timedelta, UTC
+
+# importa leitura do arquivo .env
+from dotenv import load_dotenv
+
+import os
+
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
 from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.models import Usuario
 
@@ -59,7 +68,7 @@ def get_usuario_logado(
     return usuario
 
 
-load_dotenv()
+load_dotenv() # abre o .env e carrega as variáveis
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")

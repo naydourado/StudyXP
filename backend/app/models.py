@@ -1,7 +1,18 @@
 # esse é o arquivo que, utilizado pelo SQLAlchemy, 
 # transforma Python, na tabela MySQL
 
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    DateTime,
+    ForeignKey
+)
+
+# função do SQLAlchemy responsável por criar o vínculo entre os models
+# importa relacionamento entre tabelas e cria navegação entre objetos
+from sqlalchemy.orm import relationship
+
 from datetime import datetime, UTC
 from app.database import Base
 
@@ -24,6 +35,9 @@ class Usuario(Base):
     tarefas = relationship("Tarefa", back_populates="usuario")
 
 
+registros_humor = relationship("RegistroHumor", back_populates="usuario")
+
+
 class Tarefa(Base):
     __tablename__ = "tarefas"
 
@@ -38,3 +52,15 @@ class Tarefa(Base):
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
 
     usuario = relationship("Usuario", back_populates="tarefas")
+
+class RegistroHumor(Base):
+    __tablename__ = "registros_humor"
+
+    id = Column(Integer, primary_key=True, index=True)
+    humor = Column(String(50), nullable=False)
+    observacao = Column(String(255))
+    data_registro = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+
+    usuario = relationship("Usuario", back_populates="registros_humor")
