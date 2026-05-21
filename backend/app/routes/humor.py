@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 # rota para registrar humor do usuario logado
-@router.post("/humor", response_model=HumorResponse)
+@router.post("/humor", response_model=HumorResponse, status_code=201)
 def registrar_humor(
 
     # recebe e valida os dados enviados

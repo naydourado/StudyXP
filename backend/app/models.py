@@ -108,3 +108,4 @@ class SessaoFoco(Base):
         "Usuario",
         back_populates="sessoes_foco"
     )
+    

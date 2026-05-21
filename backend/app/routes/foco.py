@@ -9,7 +9,7 @@ from app.security import get_usuario_logado
 router = APIRouter()
 
 
-@router.post("/foco", response_model=FocoResponse)
+@router.post("/foco", response_model=FocoResponse, status_code=201)
 def registrar_foco(
     dados: FocoCreate,
     db: Session = Depends(get_db),

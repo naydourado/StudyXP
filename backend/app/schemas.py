@@ -1,22 +1,23 @@
 # pydantic - biblioteca que cria os schemas e valida dados da API
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
 
 # dados comuns
 class UsuarioBase(BaseModel):
-    nome: str
+    nome: str = Field(min_length=3, max_length=100)
     email: EmailStr
 
 
 # dados para cadastro
 class UsuarioCreate(UsuarioBase):
-    senha: str
+    senha: str = Field(min_length=6, max_length=50)
+
 
 # dados para o login
 class UsuarioLogin(BaseModel):
     email: EmailStr
-    senha: str
+    senha: str = Field(min_length=6, max_length=50)
 
 
 # dados que a API devolve
@@ -30,20 +31,30 @@ class UsuarioResponse(UsuarioBase):
         from_attributes = True
 
 
+class UsuarioUpdate(BaseModel):
+    nome: str | None = Field(default=None, min_length=3, max_length=100)
+    email: EmailStr | None = None
+
+
+class AlterarSenha(BaseModel):
+    senha_atual: str = Field(min_length=6, max_length=50)
+    nova_senha: str = Field(min_length=6, max_length=50)
+
+
 # schema base das tarefas
 # define os dados principais que uma tarefa possui
 class TarefaBase(BaseModel):
-    titulo: str
-
+    titulo: str = Field(min_length=3, max_length=150)
+    
     # descricao opcional - pode ser enviada vazia
-    descricao: str | None = None
-
+    descricao: str | None = Field(default=None, max_length=255)
+    
     # valor padrao: media
     prioridade: str = "media"
-
+    
     # xp recebido ao concluir a tarefa
     # valor padrao: 10
-    xp_recompensa: int = 10
+    xp_recompensa: int = Field(default=10, ge=1, le=100)
 
 
 # schema usado para criacao de tarefa
@@ -84,8 +95,8 @@ class TarefaUpdate(BaseModel):
 
 
 class HumorBase(BaseModel):
-    humor: str
-    observacao: str | None = None
+    humor: str = Field(min_length=3, max_length=50)
+    observacao: str | None = Field(default=None, max_length=255)
 
 
 class HumorCreate(HumorBase):
@@ -102,7 +113,7 @@ class HumorResponse(HumorBase):
 
 
 class FocoBase(BaseModel):
-    tempo_minutos: int
+    tempo_minutos: int = Field(ge=1, le=300) # tempo de foco entre 1 e 300 minutos
 
 
 # schema usado para criar sessao
@@ -118,3 +129,9 @@ class FocoResponse(FocoBase):
 
     class Config:
         from_attributes = True
+
+
+# schema padrao de mensagens da api
+class MensagemResponse(BaseModel):
+    mensagem: str
+    

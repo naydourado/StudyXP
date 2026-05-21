@@ -2,7 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import Usuario
-from app.schemas import UsuarioCreate, UsuarioResponse, UsuarioLogin
+from app.schemas import (
+    UsuarioCreate,
+    UsuarioResponse,
+    UsuarioLogin,
+    UsuarioUpdate,
+    AlterarSenha,
+    MensagemResponse
+)
 from app.security import gerar_hash_senha, verificar_senha, criar_token_acesso, get_usuario_logado
 
 
@@ -72,7 +79,7 @@ def buscar_meus_dados(
 
 
 # rota para cadastrar um novo usuario
-@router.post("/usuarios", response_model=UsuarioResponse) # não mostra a senha, porque o UsuarioResponse não tem esse campo
+@router.post("/usuarios", response_model=UsuarioResponse, status_code=201) # não mostra a senha, porque o UsuarioResponse não tem esse campo
 def criar_usuario(
     usuario: UsuarioCreate,
     db: Session = Depends(get_db)
@@ -108,3 +115,68 @@ def criar_usuario(
 
     # retorna o usuario criado
     return novo_usuario
+
+@router.put("/perfil", response_model=UsuarioResponse)
+def editar_perfil(
+    dados: UsuarioUpdate,
+    db: Session = Depends(get_db),
+    usuario_logado: Usuario = Depends(get_usuario_logado)
+):
+
+    if dados.email is not None:
+        email_existente = db.query(Usuario).filter(
+            Usuario.email == dados.email,
+            Usuario.id != usuario_logado.id
+        ).first()
+
+        if email_existente:
+            raise HTTPException(
+                status_code=400,
+                detail="email ja cadastrado"
+            )
+
+        usuario_logado.email = dados.email
+
+    if dados.nome is not None:
+        usuario_logado.nome = dados.nome
+
+    db.commit()
+    db.refresh(usuario_logado)
+
+    return usuario_logado
+
+
+# rota para alterar senha do usuario logado
+@router.put(
+    "/senha",
+    response_model=MensagemResponse
+)
+def alterar_senha(
+    dados: AlterarSenha,
+    db: Session = Depends(get_db),
+    usuario_logado: Usuario = Depends(get_usuario_logado)
+):
+
+    # verifica se a senha atual esta correta
+    senha_valida = verificar_senha(
+        dados.senha_atual,
+        usuario_logado.senha
+    )
+
+    if not senha_valida:
+        raise HTTPException(
+            status_code=400,
+            detail="senha atual incorreta"
+        )
+
+    # gera hash da nova senha
+    usuario_logado.senha = gerar_hash_senha(
+        dados.nova_senha
+    )
+
+    # salva no banco
+    db.commit()
+
+    return {
+        "mensagem": "senha alterada com sucesso"
+    }

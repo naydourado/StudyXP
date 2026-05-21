@@ -3,14 +3,14 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Tarefa, Usuario
-from app.schemas import TarefaCreate, TarefaResponse, TarefaUpdate
+from app.schemas import TarefaCreate, TarefaResponse, TarefaUpdate, MensagemResponse
 from app.security import get_usuario_logado
 
 router = APIRouter()
 
 
 # rota para criar uma tarefa do usuario logado
-@router.post("/tarefas", response_model=TarefaResponse)
+@router.post("/tarefas", response_model=TarefaResponse, status_code=201)
 def criar_tarefa(
     tarefa: TarefaCreate,
     db: Session = Depends(get_db),
@@ -130,7 +130,10 @@ def editar_tarefa(
 
 
 # rota para excluir uma tarefa do usuario logado
-@router.delete("/tarefas/{tarefa_id}")
+@router.delete(
+    "/tarefas/{tarefa_id}",
+    response_model=MensagemResponse
+)
 def excluir_tarefa(
     tarefa_id: int,
     db: Session = Depends(get_db),
