@@ -99,3 +99,22 @@ class HumorResponse(HumorBase):
 
     class Config:
         from_attributes = True
+
+
+class FocoBase(BaseModel):
+    tempo_minutos: int
+
+
+# schema usado para criar sessao
+class FocoCreate(FocoBase):
+    pass
+
+
+class FocoResponse(FocoBase):
+
+    id: int
+    data_sessao: datetime
+    usuario_id: int
+
+    class Config:
+        from_attributes = True

@@ -32,10 +32,23 @@ class Usuario(Base):
         default=lambda: datetime.now(UTC)
     )
 
-    tarefas = relationship("Tarefa", back_populates="usuario")
+    # relacionamento 1:n entre usuario e tarefas
+    tarefas = relationship(
+        "Tarefa",
+        back_populates="usuario"
+    )
 
+    # relacionamento 1:n entre usuario e registros de humor
+    registros_humor = relationship(
+        "RegistroHumor",
+        back_populates="usuario"
+    )
 
-registros_humor = relationship("RegistroHumor", back_populates="usuario")
+    # relacionamento 1:n entre usuario e sessoes de foco
+    sessoes_foco = relationship(
+        "SessaoFoco",
+        back_populates="usuario"
+    )
 
 
 class Tarefa(Base):
@@ -51,7 +64,10 @@ class Tarefa(Base):
 
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
 
-    usuario = relationship("Usuario", back_populates="tarefas")
+    usuario = relationship(
+        "Usuario", 
+        back_populates="tarefas"
+    )
 
 class RegistroHumor(Base):
     __tablename__ = "registros_humor"
@@ -63,4 +79,32 @@ class RegistroHumor(Base):
 
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
 
-    usuario = relationship("Usuario", back_populates="registros_humor")
+    usuario = relationship(
+        "Usuario", 
+        back_populates="registros_humor"
+    )
+
+class SessaoFoco(Base):
+    __tablename__ = "sessoes_foco"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    # tempo estudado em minutos
+    tempo_minutos = Column(Integer, nullable=False)
+
+    data_sessao = Column(
+        DateTime,
+        default=lambda: datetime.now(UTC)
+    )
+
+    # fk do usuario dono da sessao
+    usuario_id = Column(
+        Integer,
+        ForeignKey("usuarios.id"),
+        nullable=False
+    )
+
+    usuario = relationship(
+        "Usuario",
+        back_populates="sessoes_foco"
+    )

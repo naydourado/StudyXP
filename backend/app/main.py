@@ -5,7 +5,7 @@ from app.database import engine, Base
 from app import models
 
 # importa os arquivos de rotas
-from app.routes import usuarios, tarefas, dashboard
+from app.routes import usuarios, tarefas, dashboard, humor, foco
 
 # cria as tabelas no banco
 Base.metadata.create_all(bind=engine)
@@ -13,14 +13,12 @@ Base.metadata.create_all(bind=engine)
 # cria a aplicacao fastapi
 app = FastAPI()
 
-# registra as rotas de usuarios
+# registros de cada rota
 app.include_router(usuarios.router)
-
-# registra as rotas de tarefas
 app.include_router(tarefas.router)
-
-# registra as rotas do dashboard
 app.include_router(dashboard.router)
+app.include_router(humor.router)
+app.include_router(foco.router)
 
 @app.get("/")
 def home():

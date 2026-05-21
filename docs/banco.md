@@ -1,24 +1,38 @@
-# Modelagem Inicial do Banco de Dados — StudyXP
+# Documentação Técnica do Backend — StudyXP
 
-O banco de dados do StudyXP foi modelado utilizando MySQL e SQLAlchemy.
+## 1. Visão Geral
 
-Inicialmente, o sistema possui a entidade Usuario, responsável pelo armazenamento das informações de autenticação e progresso do estudante.
+O backend do StudyXP foi desenvolvido utilizando FastAPI, com o objetivo de fornecer uma API REST para comunicação com o front-end em React.
 
-## Tabela: usuarios
+A API é responsável por gerenciar usuários, autenticação, tarefas, XP, sessões de foco, registros de humor e dados do dashboard.
 
-Campos:
+## 2. Tecnologias Utilizadas
 
-- id (PK)
-- nome
-- email
-- senha
-- xp
-- nivel
-- data_criacao
+- Python
+- FastAPI
+- Uvicorn
+- MySQL
+- SQLAlchemy
+- PyMySQL
+- Pydantic
+- JWT
+- Passlib
+- Python-dotenv
 
-## Regras
+## 3. Arquitetura
 
-- Email deve ser único
-- XP inicia em 0
-- Nível inicia em 1
-- Data de criação é registrada automaticamente
+O projeto utiliza uma arquitetura modular, separando as responsabilidades por funcionalidade.
+
+```txt
+app/
+├── main.py
+├── database.py
+├── models.py
+├── schemas.py
+├── security.py
+└── routes/
+    ├── usuarios.py
+    ├── tarefas.py
+    ├── dashboard.py
+    ├── humor.py
+    └── foco.py
