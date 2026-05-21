@@ -1,14 +1,23 @@
+# baixar o que está no txt - pip install -r requirements.txt
+
 from fastapi import FastAPI
 from app.database import engine, Base
 from app import models
-from app.routes import usuarios
 
-# verifica se a tabela já exite, se não, faz o CREATE
+# importa os arquivos de rotas
+from app.routes import usuarios, tarefas
+
+# cria as tabelas no banco
 Base.metadata.create_all(bind=engine)
 
+# cria a aplicacao fastapi
 app = FastAPI()
 
+# registra as rotas de usuarios
 app.include_router(usuarios.router)
+
+# registra as rotas de tarefas
+app.include_router(tarefas.router)
 
 
 @app.get("/")
