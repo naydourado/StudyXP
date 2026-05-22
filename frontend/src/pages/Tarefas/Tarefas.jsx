@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import {
-  LuPlus,
-  LuCircle,
-  LuCircleCheck,
-  LuX,
+    LuPlus,
+    LuCircle,
+    LuCircleCheck,
+    LuX,
 } from "react-icons/lu";
 
 import api from "../../services/api";
@@ -11,382 +11,384 @@ import Layout from "../../components/Layout/Layout";
 import "./Tarefas.css";
 
 function Tarefas() {
-  const [tarefas, setTarefas] = useState([]);
-  const [dashboard, setDashboard] = useState(null);
+    const [tarefas, setTarefas] = useState([]);
+    const [dashboard, setDashboard] = useState(null);
 
-  const [modalAberto, setModalAberto] = useState(false);
-  const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [prioridade, setPrioridade] = useState("media");
-  const [editandoId, setEditandoId] = useState(null);
-  const [erro, setErro] = useState("");
+    const [modalAberto, setModalAberto] = useState(false);
+    const [titulo, setTitulo] = useState("");
+    const [descricao, setDescricao] = useState("");
+    const [prioridade, setPrioridade] = useState("media");
+    const [editandoId, setEditandoId] = useState(null);
+    const [erro, setErro] = useState("");
 
-  const xpPorPrioridade = {
-    baixa: 20,
-    media: 50,
-    alta: 80,
-  };
+    const xpPorPrioridade = {
+        baixa: 20,
+        media: 50,
+        alta: 80,
+    };
 
-  async function carregarDados() {
-    try {
-      const tarefasResponse = await api.get("/tarefas");
-      const dashboardResponse = await api.get("/dashboard");
+    async function carregarDados() {
+        try {
+            const tarefasResponse = await api.get("/tarefas");
+            const dashboardResponse = await api.get("/dashboard");
 
-      setTarefas(tarefasResponse.data);
-      setDashboard(dashboardResponse.data);
-    } catch (error) {
-      console.log(error.response?.data || error);
-    }
-  }
-
-  useEffect(() => {
-    carregarDados();
-  }, []);
-
-  function abrirModal() {
-    setErro("");
-    setModalAberto(true);
-  }
-
-  function fecharModal() {
-    setModalAberto(false);
-    setTitulo("");
-    setDescricao("");
-    setPrioridade("media");
-    setErro("");
-    setEditandoId(null);
-  }
-
-  function abrirEdicao(tarefa) {
-    setEditandoId(tarefa.id);
-    setTitulo(tarefa.titulo);
-    setDescricao(tarefa.descricao || "");
-    setPrioridade(tarefa.prioridade);
-    setErro("");
-    setModalAberto(true);
-  }
-
-  async function salvarTarefa(e) {
-    e.preventDefault();
-
-    if (!titulo.trim()) {
-      setErro("Informe o título da tarefa.");
-      return;
+            setTarefas(tarefasResponse.data);
+            setDashboard(dashboardResponse.data);
+        } catch (error) {
+            console.log(error.response?.data || error);
+        }
     }
 
-    try {
-      const dados = {
-        titulo,
-        descricao,
-        prioridade,
-        xp_recompensa: xpPorPrioridade[prioridade],
-      };
+    useEffect(() => {
+        carregarDados();
+    }, []);
 
-      if (editandoId) {
-        await api.put(`/tarefas/${editandoId}`, dados);
-      } else {
-        await api.post("/tarefas", dados);
-      }
-
-      fecharModal();
-      carregarDados();
-    } catch (error) {
-      console.log(error.response?.data || error);
-      setErro("Erro ao salvar tarefa.");
+    function abrirModal() {
+        setErro("");
+        setModalAberto(true);
     }
-  }
 
-  async function alterarStatusTarefa(tarefa) {
-    try {
-      const novoStatus =
-        tarefa.status === "concluida"
-          ? "pendente"
-          : "concluida";
-
-      await api.put(`/tarefas/${tarefa.id}`, {
-        status: novoStatus,
-      });
-
-      carregarDados();
-    } catch (error) {
-      console.log(error.response?.data || error);
+    function fecharModal() {
+        setModalAberto(false);
+        setTitulo("");
+        setDescricao("");
+        setPrioridade("media");
+        setErro("");
+        setEditandoId(null);
     }
-  }
 
-  const pendentes = tarefas.filter(
-    (tarefa) => tarefa.status !== "concluida"
-  );
+    function abrirEdicao(tarefa) {
+        setEditandoId(tarefa.id);
+        setTitulo(tarefa.titulo);
+        setDescricao(tarefa.descricao || "");
+        setPrioridade(tarefa.prioridade);
+        setErro("");
+        setModalAberto(true);
+    }
 
-  const concluidas = tarefas.filter(
-    (tarefa) => tarefa.status === "concluida"
-  );
+    async function salvarTarefa(e) {
+        e.preventDefault();
 
-  const xpAtual = dashboard?.xp || 0;
-  const nivel = dashboard?.nivel || 1;
-  const xpProximoNivel = nivel * 100;
-  const progressoXp = Math.min(
-    (xpAtual / xpProximoNivel) * 100,
-    100
-  );
+        if (!titulo.trim()) {
+            setErro("Informe o título da tarefa.");
+            return;
+        }
 
-  return (
-    <Layout>
-      <section className="tarefas-page">
-        <header className="tarefas-top">
-          <div>
-            <h1>Tarefas</h1>
-            <p>Organize seus estudos e ganhe XP.</p>
-          </div>
+        try {
+            const dados = {
+                titulo,
+                descricao,
+                prioridade,
+                xp_recompensa: xpPorPrioridade[prioridade],
+            };
 
-          <div className="tasks-right">
-            <div className="level-card">
-              <div className="level-info">
-                <strong>Nível {nivel}</strong>
+            if (editandoId) {
+                await api.put(`/tarefas/${editandoId}`, dados);
+            } else {
+                await api.post("/tarefas", dados);
+            }
 
-                <span>
-                  {xpAtual} / {xpProximoNivel} XP
-                </span>
-              </div>
+            fecharModal();
+            carregarDados();
+        } catch (error) {
+            console.log(error.response?.data || error);
+            setErro("Erro ao salvar tarefa.");
+        }
+    }
 
-              <div className="level-bar">
-                <div
-                  className="level-progress"
-                  style={{
-                    width: `${progressoXp}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
+    async function alterarStatusTarefa(tarefa) {
+        try {
+            const novoStatus =
+                tarefa.status === "concluida"
+                    ? "pendente"
+                    : "concluida";
 
-            <button
-              className="new-task-btn"
-              onClick={abrirModal}
-            >
-              <LuPlus />
-              Nova Tarefa
-            </button>
-          </div>
-        </header>
+            await api.put(`/tarefas/${tarefa.id}`, {
+                status: novoStatus,
+            });
 
-        <section className="tarefas-columns">
-          <div className="tarefas-card">
-            <h2>
-              Pendentes ({pendentes.length})
-            </h2>
+            carregarDados();
+        } catch (error) {
+            console.log(error.response?.data || error);
+        }
+    }
 
-            {pendentes.length > 0 ? (
-              pendentes.map((tarefa) => (
-                <div
-                  className="task-item"
-                  key={tarefa.id}
-                  onClick={() =>
-                    abrirEdicao(tarefa)
-                  }
-                >
-                  <button
-                    className="task-check"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      alterarStatusTarefa(
-                        tarefa
-                      );
-                    }}
-                  >
-                    <LuCircle />
-                  </button>
+    const pendentes = tarefas.filter(
+        (tarefa) => tarefa.status !== "concluida"
+    );
 
-                  <div className="task-text">
-                    <strong>
-                      {tarefa.titulo}
-                    </strong>
+    const concluidas = tarefas.filter(
+        (tarefa) => tarefa.status === "concluida"
+    );
 
-                    <span>
-                      {tarefa.prioridade.toUpperCase()}
-                    </span>
-                  </div>
+    const xpAtual = dashboard?.xp || 0;
+    const nivel = dashboard?.nivel || 1;
+    const xpProximoNivel = nivel * 100;
+    const progressoXp = Math.min(
+        (xpAtual / xpProximoNivel) * 100,
+        100
+    );
 
-                  <span className="xp-badge">
-                    +{tarefa.xp_recompensa}
-                    xp
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="empty-text">
-                Nenhuma tarefa pendente.
-              </p>
-            )}
-          </div>
+    return (
+        <Layout>
+            <section className="tarefas-page">
+                <header className="tarefas-top">
+                    <div>
+                        <h1>Tarefas</h1>
+                        <p>Organize seus estudos e ganhe XP.</p>
+                    </div>
 
-          <div className="tarefas-card">
-            <h2>
-              Concluídas ({concluidas.length})
-            </h2>
+                    <div className="tasks-right">
+                        <div className="level-card">
+                            <div className="level-info">
+                                <strong>Nível {nivel}</strong>
 
-            {concluidas.length > 0 ? (
-              concluidas.map((tarefa) => (
-                <div
-                  className="task-item task-done"
-                  key={tarefa.id}
-                  onClick={() =>
-                    abrirEdicao(tarefa)
-                  }
-                >
-                  <button
-                    className="task-check"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      alterarStatusTarefa(
-                        tarefa
-                      );
-                    }}
-                  >
-                    <LuCircleCheck className="task-complete-icon" />
-                  </button>
+                                <span>
+                                    {xpAtual} / {xpProximoNivel} XP
+                                </span>
+                            </div>
 
-                  <div className="task-text">
-                    <strong>
-                      {tarefa.titulo}
-                    </strong>
+                            <div className="level-bar">
+                                <div
+                                    className="level-progress"
+                                    style={{
+                                        width: `${progressoXp}%`,
+                                    }}
+                                ></div>
+                            </div>
+                        </div>
 
-                    <span>
-                      {tarefa.prioridade.toUpperCase()}
-                    </span>
-                  </div>
+                        <button
+                            className="new-task-btn"
+                            onClick={abrirModal}
+                        >
+                            <LuPlus />
+                            Nova Tarefa
+                        </button>
+                    </div>
+                </header>
 
-                  <span className="xp-badge">
-                    +{tarefa.xp_recompensa}
-                    xp
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="empty-text">
-                Nenhuma tarefa concluída.
-              </p>
-            )}
-          </div>
-        </section>
+                <section className="tarefas-columns">
+                    <div className="tarefas-card">
+                        <h2>
+                            Pendentes ({pendentes.length})
+                        </h2>
 
-        {modalAberto && (
-          <div className="modal-overlay">
-            <div className="task-modal">
-              <div className="modal-header">
-                <h2>
-                  {editandoId
-                    ? "Editar Tarefa"
-                    : "Nova Tarefa"}
-                </h2>
+                        {pendentes.length > 0 ? (
+                            pendentes.map((tarefa) => (
+                                <div
+                                    className="task-item"
+                                    key={tarefa.id}
+                                    onClick={() =>
+                                        abrirEdicao(tarefa)
+                                    }
+                                >
+                                    <button
+                                        className="task-check"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            alterarStatusTarefa(
+                                                tarefa
+                                            );
+                                        }}
+                                    >
+                                        <LuCircle />
+                                    </button>
 
-                <button onClick={fecharModal}>
-                  <LuX />
-                </button>
-              </div>
+                                    <div className="task-text">
+                                        <strong>
+                                            {tarefa.titulo}
+                                        </strong>
 
-              <form onSubmit={salvarTarefa}>
-                <label>Título</label>
+                                        <span>
+                                            {tarefa.prioridade.charAt(0).toUpperCase() +
+                                                tarefa.prioridade.slice(1)}
+                                        </span>
+                                    </div>
 
-                <input
-                  type="text"
-                  placeholder="Ex: Estudar React"
-                  value={titulo}
-                  onChange={(e) =>
-                    setTitulo(e.target.value)
-                  }
-                />
+                                    <span className="xp-badge">
+                                        +{tarefa.xp_recompensa}
+                                        xp
+                                    </span>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="empty-text">
+                                Nenhuma tarefa pendente.
+                            </p>
+                        )}
+                    </div>
 
-                <label>Descrição</label>
+                    <div className="tarefas-card">
+                        <h2>
+                            Concluídas ({concluidas.length})
+                        </h2>
 
-                <textarea
-                  placeholder="Descreva a tarefa"
-                  value={descricao}
-                  onChange={(e) =>
-                    setDescricao(
-                      e.target.value
-                    )
-                  }
-                />
+                        {concluidas.length > 0 ? (
+                            concluidas.map((tarefa) => (
+                                <div
+                                    className="task-item task-done"
+                                    key={tarefa.id}
+                                    onClick={() =>
+                                        abrirEdicao(tarefa)
+                                    }
+                                >
+                                    <button
+                                        className="task-check"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            alterarStatusTarefa(
+                                                tarefa
+                                            );
+                                        }}
+                                    >
+                                        <LuCircleCheck className="task-complete-icon" />
+                                    </button>
 
-                <label>Prioridade</label>
+                                    <div className="task-text">
+                                        <strong>
+                                            {tarefa.titulo}
+                                        </strong>
 
-                <div className="priority-options">
-                  <button
-                    type="button"
-                    className={
-                      prioridade === "baixa"
-                        ? "priority-btn active"
-                        : "priority-btn"
-                    }
-                    onClick={() =>
-                      setPrioridade("baixa")
-                    }
-                  >
-                    <span>Baixa</span>
-                    <small>20 XP</small>
-                  </button>
+                                        <span>
+                                            {tarefa.prioridade.charAt(0).toUpperCase() +
+                                                tarefa.prioridade.slice(1)}
+                                        </span>
+                                    </div>
 
-                  <button
-                    type="button"
-                    className={
-                      prioridade === "media"
-                        ? "priority-btn active"
-                        : "priority-btn"
-                    }
-                    onClick={() =>
-                      setPrioridade("media")
-                    }
-                  >
-                    <span>Média</span>
-                    <small>50 XP</small>
-                  </button>
+                                    <span className="xp-badge">
+                                        +{tarefa.xp_recompensa}
+                                        xp
+                                    </span>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="empty-text">
+                                Nenhuma tarefa concluída.
+                            </p>
+                        )}
+                    </div>
+                </section>
 
-                  <button
-                    type="button"
-                    className={
-                      prioridade === "alta"
-                        ? "priority-btn active"
-                        : "priority-btn"
-                    }
-                    onClick={() =>
-                      setPrioridade("alta")
-                    }
-                  >
-                    <span>Alta</span>
-                    <small>80 XP</small>
-                  </button>
-                </div>
+                {modalAberto && (
+                    <div className="modal-overlay">
+                        <div className="task-modal">
+                            <div className="modal-header">
+                                <h2>
+                                    {editandoId
+                                        ? "Editar Tarefa"
+                                        : "Nova Tarefa"}
+                                </h2>
 
-                {erro && (
-                  <span className="error-message">
-                    {erro}
-                  </span>
+                                <button onClick={fecharModal}>
+                                    <LuX />
+                                </button>
+                            </div>
+
+                            <form onSubmit={salvarTarefa}>
+                                <label>Título</label>
+
+                                <input
+                                    type="text"
+                                    placeholder="Ex: Estudar React"
+                                    value={titulo}
+                                    onChange={(e) =>
+                                        setTitulo(e.target.value)
+                                    }
+                                />
+
+                                <label>Descrição</label>
+
+                                <textarea
+                                    placeholder="Descreva a tarefa"
+                                    value={descricao}
+                                    onChange={(e) =>
+                                        setDescricao(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+
+                                <label>Prioridade</label>
+
+                                <div className="priority-options">
+                                    <button
+                                        type="button"
+                                        className={
+                                            prioridade === "baixa"
+                                                ? "priority-btn active"
+                                                : "priority-btn"
+                                        }
+                                        onClick={() =>
+                                            setPrioridade("baixa")
+                                        }
+                                    >
+                                        <span>Baixa</span>
+                                        <small>20 XP</small>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className={
+                                            prioridade === "media"
+                                                ? "priority-btn active"
+                                                : "priority-btn"
+                                        }
+                                        onClick={() =>
+                                            setPrioridade("media")
+                                        }
+                                    >
+                                        <span>Média</span>
+                                        <small>50 XP</small>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className={
+                                            prioridade === "alta"
+                                                ? "priority-btn active"
+                                                : "priority-btn"
+                                        }
+                                        onClick={() =>
+                                            setPrioridade("alta")
+                                        }
+                                    >
+                                        <span>Alta</span>
+                                        <small>80 XP</small>
+                                    </button>
+                                </div>
+
+                                {erro && (
+                                    <span className="error-message">
+                                        {erro}
+                                    </span>
+                                )}
+
+                                <div className="modal-actions">
+                                    <button
+                                        type="button"
+                                        className="cancel-btn"
+                                        onClick={fecharModal}
+                                    >
+                                        Cancelar
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        className="save-btn"
+                                    >
+                                        {editandoId
+                                            ? "Salvar alterações"
+                                            : "Criar tarefa"}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 )}
-
-                <div className="modal-actions">
-                  <button
-                    type="button"
-                    className="cancel-btn"
-                    onClick={fecharModal}
-                  >
-                    Cancelar
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="save-btn"
-                  >
-                    {editandoId
-                      ? "Salvar alterações"
-                      : "Criar tarefa"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-      </section>
-    </Layout>
-  );
+            </section>
+        </Layout>
+    );
 }
 
 export default Tarefas;
