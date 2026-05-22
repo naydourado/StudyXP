@@ -8,6 +8,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey
 )
+from datetime import datetime, UTC
 
 # função do SQLAlchemy responsável por criar o vínculo entre os models
 # importa relacionamento entre tabelas e cria navegação entre objetos
@@ -26,6 +27,8 @@ class Usuario(Base):
     senha = Column(String(255), nullable=False)
     xp = Column(Integer, default=0) # começa em 0
     nivel = Column(Integer, default=1) # começa em 1
+    ultimo_acesso = Column(DateTime, nullable=True)
+    sequencia_dias = Column(Integer, default=0)
     
     data_criacao = Column(
         DateTime,

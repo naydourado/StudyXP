@@ -1,4 +1,4 @@
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, UTC
 
@@ -74,26 +74,20 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
-
-# configura o algoritmo usado para criptografar as senhas
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
-)
-
+password_hash = PasswordHash.recommended()
 
 # funcao responsavel por gerar o hash da senha
 def gerar_hash_senha(senha: str):
 
     # retorna a senha criptografada
-    return pwd_context.hash(senha)
+    return password_hash.hash(senha)
 
 
 # funcao responsavel por verificar se a senha digitada bate com o hash salvo
 def verificar_senha(senha: str, senha_hash: str):
 
     # compara a senha digitada com a senha criptografada
-    return pwd_context.verify(senha, senha_hash)
+    return password_hash.verify(senha, senha_hash)
 
 
 # funcao responsavel por criar o token de acesso

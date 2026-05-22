@@ -119,6 +119,9 @@ def editar_tarefa(
     if dados.xp_recompensa is not None:
         tarefa.xp_recompensa = dados.xp_recompensa
 
+    if dados.status is not None:
+        tarefa.status = dados.status
+
     # salva as alteracoes no banco
     db.commit()
 

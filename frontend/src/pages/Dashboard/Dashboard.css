@@ -1,0 +1,250 @@
+.dashboard-page {
+  width: 100%;
+  min-height: 100%;
+  padding: 42px 18px;
+}
+
+.dashboard-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 62px;
+}
+
+.dashboard-top h1 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.dashboard-top p {
+  color: #555;
+  font-size: 15px;
+}
+
+.level-card {
+  width: 290px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px 24px;
+}
+
+.level-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.level-info strong {
+  font-size: 18px;
+}
+
+.level-info span {
+  font-size: 14px;
+  color: #555;
+}
+
+.level-bar {
+  height: 14px;
+  background: #c9d0da;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.level-progress {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2d159d, #63c7ec);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 38px 22px;
+}
+
+.dash-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 22px 32px;
+  min-height: 132px;
+}
+
+.tasks-card,
+.sequence-card {
+  min-height: 230px;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title svg {
+  color: #3b63ff;
+  font-size: 22px;
+}
+
+.sequence-card .card-title svg {
+  color: #ef4444;
+}
+
+.card-title h2 {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.see-all {
+  background: transparent;
+  color: #4f46e5;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.task-item {
+  min-height: 60px;
+  background: #f8fbff;
+  border-radius: 18px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.task-icon {
+  color: #3b63ff;
+  font-size: 22px;
+}
+
+.task-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #6b8df6;
+  display: block;
+}
+
+.task-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-text strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.task-text span {
+  margin-top: 4px;
+  color: #777;
+  font-size: 12px;
+}
+
+.task-done .task-text strong {
+  text-decoration: line-through;
+  color: #777;
+}
+
+.xp-badge {
+  background: #e4ecff;
+  color: #4865de;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.sequence-number {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin: 28px 0 30px;
+}
+
+.sequence-number strong {
+  font-size: 38px;
+  color: #1e1b8f;
+}
+
+.sequence-number span {
+  color: #777;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.week-day {
+  text-align: center;
+}
+
+.day {
+  height: 36px;
+  border-radius: 10px;
+  background: #c8d0dc;
+  margin-bottom: 10px;
+}
+
+.day.active {
+  background: linear-gradient(90deg, #3b1fc4, #2e26d4);
+}
+
+.week-day span {
+  font-size: 12px;
+  color: #777;
+}
+
+.focus-card p,
+.mood-card p {
+  margin: 12px 0 18px;
+  color: #555;
+  font-size: 14px;
+}
+
+.focus-card button {
+  background: linear-gradient(90deg, #2b159c, #546cff);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-weight: 600;
+}
+
+.mood-options {
+  display: flex;
+  gap: 14px;
+}
+
+.mood-options button {
+  width: 54px;
+  height: 42px;
+  border-radius: 8px;
+  background: #dce7ff;
+  font-size: 22px;
+}
+
+.focus-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #2b159c, #546cff);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-weight: 600;
+}

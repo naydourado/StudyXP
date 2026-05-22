@@ -10,6 +10,7 @@ from app.schemas import (
     AlterarSenha,
     MensagemResponse
 )
+from datetime import datetime, UTC
 from app.security import gerar_hash_senha, verificar_senha, criar_token_acesso, get_usuario_logado
 
 
@@ -48,6 +49,27 @@ def login(
             status_code=401,
             detail="email ou senha invalidos"
         )
+    
+    # controla a sequencia de acessos do usuario
+    agora = datetime.now(UTC)
+
+    if usuario.ultimo_acesso:
+        dias_diferenca = (
+            agora.date() -
+            usuario.ultimo_acesso.date()
+        ).days
+
+        if dias_diferenca == 1:
+            usuario.sequencia_dias += 1
+        elif dias_diferenca > 1:
+            usuario.sequencia_dias = 1
+    else:
+        usuario.sequencia_dias = 1
+
+    usuario.ultimo_acesso = agora
+
+    db.commit()
+    db.refresh(usuario)
 
     # cria o token com o id do usuario
     token = criar_token_acesso(
@@ -66,7 +88,6 @@ def login(
             "nivel": usuario.nivel
         }
     }
-
 
 # rota protegida para buscar os dados do usuario logado
 @router.get("/me", response_model=UsuarioResponse)

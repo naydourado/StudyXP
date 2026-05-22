@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import "../Login/Login.css";
+import "../../components/AuthCard/AuthCard.css";
 
 function Cadastro() {
   const navigate = useNavigate();
@@ -10,6 +10,7 @@ function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
 
   async function cadastrar(e) {
     e.preventDefault();
@@ -22,9 +23,17 @@ function Cadastro() {
         senha,
       });
 
-      navigate("/");
-    } catch {
+      setSucesso("Conta criada com sucesso!");
+      setErro("");
+
+      // espera 2 segundos e vai pro login
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      console.log(error.response?.data || error);
       setErro("Erro ao cadastrar. Verifique os dados.");
+      setSucesso("");
     }
   }
 
@@ -61,7 +70,17 @@ function Cadastro() {
             onChange={(e) => setSenha(e.target.value)}
           />
 
-          {erro && <span className="error-message">{erro}</span>}
+          {erro && (
+            <span className="error-message">
+              {erro}
+            </span>
+          )}
+
+          {sucesso && (
+            <span className="success-message">
+              {sucesso}
+            </span>
+          )}
 
           <button type="submit">Cadastrar</button>
         </form>

@@ -11,13 +11,13 @@ class UsuarioBase(BaseModel):
 
 # dados para cadastro
 class UsuarioCreate(UsuarioBase):
-    senha: str = Field(min_length=6, max_length=50)
+    senha: str = Field(min_length=6, max_length=72)
 
 
 # dados para o login
 class UsuarioLogin(BaseModel):
     email: EmailStr
-    senha: str = Field(min_length=6, max_length=50)
+    senha: str = Field(min_length=6, max_length=72)
 
 
 # dados que a API devolve
@@ -37,8 +37,8 @@ class UsuarioUpdate(BaseModel):
 
 
 class AlterarSenha(BaseModel):
-    senha_atual: str = Field(min_length=6, max_length=50)
-    nova_senha: str = Field(min_length=6, max_length=50)
+    senha_atual: str = Field(min_length=6, max_length=72)
+    nova_senha: str = Field(min_length=6, max_length=72)
 
 
 # schema base das tarefas
@@ -80,18 +80,11 @@ class TarefaResponse(TarefaBase):
 
 # schema usado para editar tarefa
 class TarefaUpdate(BaseModel):
-
-    # titulo opcional
     titulo: str | None = None
-
-    # descricao opcional
     descricao: str | None = None
-
-    # prioridade opcional
     prioridade: str | None = None
-
-    # xp opcional
     xp_recompensa: int | None = None
+    status: str | None = None
 
 
 class HumorBase(BaseModel):

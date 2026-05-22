@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from app.database import engine, Base
 from app import models
+from fastapi.middleware.cors import CORSMiddleware
 
 # importa os arquivos de rotas
 from app.routes import usuarios, tarefas, dashboard, humor, foco
@@ -12,6 +13,16 @@ Base.metadata.create_all(bind=engine)
 
 # cria a aplicacao fastapi
 app = FastAPI()
+
+# libera comunicacao entre o front (react)
+# e o backend (fastapi) atraves do cors
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"], # permite token/cookies/autenticação
+    allow_headers=["*"], # → aceita GET/POST/PUT/DELETE etc
+)
 
 # registros de cada rota
 app.include_router(usuarios.router)
