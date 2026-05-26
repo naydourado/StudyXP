@@ -53,6 +53,11 @@ class Usuario(Base):
         back_populates="usuario"
     )
 
+    acessos = relationship(
+    "HistoricoAcesso",
+    back_populates="usuario"
+)
+
 
 class Tarefa(Base):
     __tablename__ = "tarefas"
@@ -112,3 +117,23 @@ class SessaoFoco(Base):
         back_populates="sessoes_foco"
     )
     
+# tabela responsavel por registrar acessos do usuario
+class HistoricoAcesso(Base):
+    __tablename__ = "historico_acessos"
+
+    id = Column(Integer, primary_key=True)
+
+    usuario_id = Column(
+        Integer,
+        ForeignKey("usuarios.id")
+    )
+
+    data_acesso = Column(
+        DateTime,
+        default=datetime.now(UTC)
+    )
+
+    usuario = relationship(
+        "Usuario",
+        back_populates="acessos"
+    )

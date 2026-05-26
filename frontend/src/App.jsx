@@ -4,9 +4,11 @@ import Login from "./pages/Login/Login";
 import Cadastro from "./pages/Cadastro/Cadastro";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Tarefas from "./pages/Tarefas/Tarefas";
-// import Foco from "./pages/Foco/Foco";
-// import Humor from "./pages/Humor/Humor";
-// import Perfil from "./pages/Perfil/Perfil";
+import Progresso from "./pages/Progresso/Progresso";
+import Foco from "./pages/Foco/Foco";
+import Humor from "./pages/Humor/Humor";
+import Perfil from "./pages/Perfil/Perfil";
+import Configuracoes from "./pages/Configuracoes/Configuracoes";
 
 function App() {
   return (
@@ -16,9 +18,11 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tarefas" element={<Tarefas />} />
-        {/* <Route path="/foco" element={<Foco />} />
+        <Route path="/progresso" element={<Progresso />} />
+        <Route path="/foco" element={<Foco />} />
         <Route path="/humor" element={<Humor />} />
-        <Route path="/perfil" element={<Perfil />} /> */}
+        <Route path="/perfil" element={<Perfil />} />
+        <Route path="/configuracoes" element={<Configuracoes />} />
       </Routes>
     </BrowserRouter>
   );

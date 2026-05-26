@@ -42,6 +42,22 @@ function Dashboard() {
     const xpProximoNivel = nivel * 100;
     const progressoXp = Math.min((xpAtual / xpProximoNivel) * 100, 100);
 
+    async function alterarStatusTarefa(tarefa) {
+        try {
+            const novoStatus =
+                tarefa.status === "concluida" ? "pendente" : "concluida";
+
+            await api.put(`/tarefas/${tarefa.id}`, {
+                status: novoStatus,
+            });
+
+            const response = await api.get("/dashboard");
+            setDados(response.data);
+        } catch (error) {
+            console.log(error.response?.data || error);
+        }
+    }
+
     return (
         <Layout>
             <section className="dashboard-page">
@@ -81,37 +97,50 @@ function Dashboard() {
                             </Link>
                         </div>
 
-                        {dados.tarefas && dados.tarefas.length > 0 ? (
-                            dados.tarefas.map((tarefa) => (
-                                <div
-                                    className={
-                                        tarefa.status === "concluida"
-                                            ? "task-item task-done"
-                                            : "task-item"
-                                    }
-                                    key={tarefa.id}
-                                >
-                                    {tarefa.status === "concluida" ? (
-                                        <span className="task-dot"></span>
-                                    ) : (
-                                        <LuCircle className="task-icon" />
-                                    )}
+                        <div className="dashboard-task-list">
+                            {dados.tarefas && dados.tarefas.length > 0 ? (
+                                dados.tarefas.map((tarefa) => (
+                                    <div
+                                        className={
+                                            tarefa.status === "concluida"
+                                                ? "task-item task-done"
+                                                : "task-item"
+                                        }
+                                        key={tarefa.id}
+                                    >
+                                        <button
+                                            className="task-check"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                alterarStatusTarefa(tarefa);
+                                            }}
+                                        >
+                                            {tarefa.status === "concluida" ? (
+                                                <LuCircleCheck />
+                                            ) : (
+                                                <LuCircle />
+                                            )}
+                                        </button>
 
-                                    <div className="task-text">
-                                        <strong>{tarefa.titulo}</strong>
-                                        <span>{tarefa.prioridade}</span>
+                                        <Link to="/tarefas" className="task-text">
+                                            <strong>{tarefa.titulo}</strong>
+
+                                            <span>
+                                                {tarefa.prioridade.charAt(0).toUpperCase() +
+                                                    tarefa.prioridade.slice(1)}
+                                            </span>
+                                        </Link>
+
+                                        <span className="xp-badge">
+                                            +{tarefa.xp_recompensa}xp
+                                        </span>
                                     </div>
-
-                                    <span className="xp-badge">
-                                        +{tarefa.xp_recompensa}xp
-                                    </span>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="empty-text">
-                                Nenhuma tarefa cadastrada ainda.
-                            </p>
-                        )}
+                                ))
+                            ) : (
+                                <p className="empty-text">Nenhuma tarefa cadastrada ainda.</p>
+                            )}
+                        </div>
                     </div>
 
                     <div className="dash-card sequence-card">
@@ -131,11 +160,12 @@ function Dashboard() {
                                     <div className="week-day" key={dia}>
                                         <div
                                             className={
-                                                index < (dados.sequencia_dias || 0)
+                                                dados.dias_ativos?.includes(index)
                                                     ? "day active"
                                                     : "day"
                                             }
                                         ></div>
+
                                         <span>{dia}</span>
                                     </div>
                                 )

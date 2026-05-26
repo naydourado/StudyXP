@@ -10,6 +10,7 @@ import {
   LuLogOut,
 } from "react-icons/lu";
 
+import Logo from "../../assets/StudyXP.png";
 import "./Layout.css";
 
 function Layout({ children }) {
@@ -63,7 +64,7 @@ function Layout({ children }) {
     <main className="app-layout">
       <aside className="sidebar">
         <div>
-          <h1 className="sidebar-logo">STUDYXP</h1>
+          <img className="sidebar-logo" src={Logo} alt="Logo StudyXP" />
 
           <nav className="sidebar-nav">
             {menuItems.map((item) => (

@@ -1,0 +1,342 @@
+.perfil-page {
+  width: 100%;
+  padding: 28px 18px;
+}
+
+.perfil-header {
+  margin-bottom: 32px;
+}
+
+.perfil-header h1 {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.perfil-header p {
+  color: #5f6b7a;
+  font-size: 17px;
+}
+
+.perfil-top-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.95fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.profile-summary-card,
+.profile-info-card,
+.achievements-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 34px;
+}
+
+.profile-summary-card {
+  text-align: center;
+}
+
+.avatar-ring {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  margin: 0 auto 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.avatar-circle {
+  width: 106px;
+  height: 106px;
+  border-radius: 50%;
+  background: #2639d6;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  font-weight: 800;
+  border: 8px solid #ffffff;
+}
+
+.avatar-ring span {
+  position: absolute;
+  right: -6px;
+  bottom: 20px;
+  background: #ffffff;
+  color: #4f46e5;
+  padding: 8px 13px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.profile-summary-card h2 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.profile-summary-card p {
+  color: #687386;
+  margin-bottom: 26px;
+}
+
+.xp-box {
+  background: #f3f6fb;
+  border-radius: 18px;
+  padding: 22px;
+  text-align: left;
+}
+
+.xp-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.xp-info span {
+  color: #4268ef;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-size: 13px;
+}
+
+.xp-info strong {
+  font-size: 16px;
+}
+
+.xp-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: #e5ebf6;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.xp-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2232c9, #4a83ff);
+}
+
+.xp-box small {
+  color: #5f6b7a;
+  font-size: 13px;
+}
+
+.profile-info-card h2 {
+  font-size: 22px;
+  margin-bottom: 42px;
+}
+
+.profile-info-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+
+.profile-info-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #526070;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.profile-info-card input {
+  height: 54px;
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  background: #edf2fb;
+  padding: 0 18px;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.profile-stats {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 36px;
+}
+
+.profile-stats div {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  column-gap: 14px;
+  align-items: center;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  grid-row: span 2;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon svg {
+  font-size: 24px;
+}
+
+.stat-icon.orange {
+  background: #fff0d9;
+  color: #f59e0b;
+}
+
+.stat-icon.blue {
+  background: #e8efff;
+  color: #4f70ff;
+}
+
+.profile-stats p {
+  color: #718096;
+  font-size: 14px;
+}
+
+.profile-stats strong {
+  font-size: 18px;
+}
+
+.profile-info-card button {
+  align-self: flex-end;
+  min-width: 210px;
+  height: 54px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #2538ca, #4b85ff);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.perfil-message {
+  color: #4f46e5;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.achievements-card {
+  padding: 34px;
+}
+
+.achievements-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 34px;
+}
+
+.achievements-header h2 {
+  font-size: 22px;
+}
+
+.achievements-header span {
+  background: #eef2ff;
+  color: #3d63ff;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+}
+
+.achievement-item {
+  min-height: 200px;
+  border-radius: 18px;
+  padding: 32px 20px;
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.achievement-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.achievement-icon svg {
+  font-size: 28px;
+}
+
+.achievement-item strong {
+  display: block;
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.achievement-item p {
+  color: #718096;
+  font-size: 13px;
+}
+
+.achievement-item.blue {
+  border-color: #cbd8ff;
+}
+
+.achievement-item.blue .achievement-icon {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.achievement-item.orange {
+  border-color: #ffd99a;
+}
+
+.achievement-item.orange .achievement-icon {
+  background: #fff0d9;
+  color: #f59e0b;
+}
+
+.achievement-item.locked {
+  background: #f6f8fc;
+  border: 2px dashed #cbd5e1;
+  color: #7c8797;
+}
+
+.achievement-item.locked .achievement-icon {
+  background: #e8eef8;
+  color: #6b7280;
+}
+
+.locked-bar {
+  width: 130px;
+  height: 8px;
+  background: #e1e7f0;
+  border-radius: 999px;
+  margin: 22px auto 0;
+  overflow: hidden;
+}
+
+.locked-bar span {
+  display: block;
+  width: 45%;
+  height: 100%;
+  background: #aab4c5;
+  border-radius: 999px;
+}

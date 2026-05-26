@@ -12,6 +12,7 @@ from app.schemas import (
 )
 from datetime import datetime, UTC
 from app.security import gerar_hash_senha, verificar_senha, criar_token_acesso, get_usuario_logado
+from app.models import HistoricoAcesso
 
 
 # APIRouter() - separa rotas por arquivo
@@ -50,8 +51,15 @@ def login(
             detail="email ou senha invalidos"
         )
     
-    # controla a sequencia de acessos do usuario
+    # controla sequencia e registra acesso
     agora = datetime.now(UTC)
+
+    novo_acesso = HistoricoAcesso(
+        usuario_id=usuario.id,
+        data_acesso=agora
+    )
+
+    db.add(novo_acesso)
 
     if usuario.ultimo_acesso:
         dias_diferenca = (
@@ -61,6 +69,7 @@ def login(
 
         if dias_diferenca == 1:
             usuario.sequencia_dias += 1
+
         elif dias_diferenca > 1:
             usuario.sequencia_dias = 1
     else:

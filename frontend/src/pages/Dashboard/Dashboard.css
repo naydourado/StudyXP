@@ -248,3 +248,33 @@
   padding: 10px 22px;
   font-weight: 600;
 }
+
+.dashboard-task-list {
+  max-height: 140px;
+  overflow: hidden;
+}
+
+.dashboard-task-list .task-item {
+  cursor: default;
+}
+
+.dashboard-task-list .task-text {
+  flex: 1;
+  color: inherit;
+}
+
+.dashboard-task-list .task-text strong {
+  display: block;
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-task-list .task-check {
+  background: transparent;
+  color: #4f74ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

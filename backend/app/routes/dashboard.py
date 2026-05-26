@@ -3,8 +3,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from app.database import get_db
-from app.models import Usuario, Tarefa, RegistroHumor, SessaoFoco
+from app.models import Usuario, Tarefa, RegistroHumor, SessaoFoco, HistoricoAcesso
 from app.security import get_usuario_logado
+from datetime import datetime, timedelta, UTC
+
 
 # cria o router das rotas do dashboard
 router = APIRouter()
@@ -71,12 +73,45 @@ def buscar_dashboard(
         Tarefa.data_criacao.desc()
     ).limit(2).all()
 
+    # busca acessos da ultima semana
+    hoje = datetime.now().date()
+    inicio_semana = hoje - timedelta(days=6)
+
+    acessos_semana = db.query(
+        HistoricoAcesso
+    ).filter(
+        HistoricoAcesso.usuario_id == usuario_logado.id,
+        HistoricoAcesso.data_acesso >= inicio_semana
+    ).all()
+
+    # busca acessos da ultima semana
+    hoje = datetime.now(UTC).date()
+    inicio_semana = hoje - timedelta(days=6)
+
+    acessos_semana = db.query(HistoricoAcesso).filter(
+        HistoricoAcesso.usuario_id == usuario_logado.id,
+        HistoricoAcesso.data_acesso >= inicio_semana
+    ).all()
+
+    # converte os acessos para o padrao do front
+    # front: domingo=0, segunda=1, ..., sabado=6
+    dias_ativos = []
+
+    for acesso in acessos_semana:
+        dia_python = acesso.data_acesso.weekday()
+        dia_front = (dia_python + 1) % 7
+
+        if dia_front not in dias_ativos:
+            dias_ativos.append(dia_front)
+
+    sequencia_dias = len(dias_ativos)
+
     # retorna os dados utilizados pelo dashboard
     return {
         "usuario": usuario_logado.nome,
         "xp": usuario_logado.xp,
         "nivel": usuario_logado.nivel,
-        "sequencia_dias": usuario_logado.sequencia_dias,
+        "sequencia_dias": sequencia_dias,   
         "total_tarefas": total_tarefas,
         "tarefas_concluidas": tarefas_concluidas,
         "tarefas_pendentes": tarefas_pendentes,
@@ -87,6 +122,9 @@ def buscar_dashboard(
             if ultimo_humor
             else None
         ),
+
+         # retorna os dias acessados da semana
+        "dias_ativos": dias_ativos,
 
         # converte tarefas para json
         "tarefas": [

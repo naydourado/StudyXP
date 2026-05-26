@@ -1,0 +1,118 @@
+.config-page {
+  width: 100%;
+  padding: 42px 18px;
+}
+
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 36px;
+}
+
+.config-header h1 {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.config-header p {
+  color: #555;
+  font-size: 15px;
+}
+
+.settings-card,
+.account-card {
+  width: 620px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+}
+
+.settings-card {
+  margin-bottom: 24px;
+}
+
+.settings-title,
+.account-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.settings-title svg {
+  color: #4f46e5;
+}
+
+.account-title svg,
+.account-title h2 {
+  color: #ef4444;
+}
+
+.settings-title h2,
+.account-title h2 {
+  font-size: 20px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+}
+
+.setting-row h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.setting-row p {
+  color: #666;
+  font-size: 13px;
+}
+
+.switch {
+  width: 46px;
+  height: 24px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.switch span {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: 0.2s;
+}
+
+.switch.active {
+  background: #7db0f5;
+  justify-content: flex-end;
+}
+
+.account-actions {
+  display: flex;
+  gap: 18px;
+}
+
+.password-btn {
+  background: #dfe8ff;
+  color: #333;
+  padding: 12px 34px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.delete-account-btn {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  padding: 12px 34px;
+  border-radius: 12px;
+  font-weight: 700;
+}

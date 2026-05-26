@@ -105,6 +105,9 @@ def editar_tarefa(
             status_code=404,
             detail="tarefa nao encontrada"
         )
+    
+    # guarda o status anterior da tarefa
+    status_anterior = tarefa.status
 
     # atualiza apenas os campos enviados
     if dados.titulo is not None:
@@ -122,6 +125,21 @@ def editar_tarefa(
     if dados.status is not None:
         tarefa.status = dados.status
 
+        # se estava pendente e virou concluida, soma xp
+        if status_anterior != "concluida" and dados.status == "concluida":
+            usuario_logado.xp += tarefa.xp_recompensa
+
+        # se estava concluida e voltou para pendente, remove xp
+        if status_anterior == "concluida" and dados.status != "concluida":
+            usuario_logado.xp -= tarefa.xp_recompensa
+
+            # evita xp negativo
+            if usuario_logado.xp < 0:
+                usuario_logado.xp = 0
+
+        # recalcula nivel
+        usuario_logado.nivel = (usuario_logado.xp // 100) + 1
+        
     # salva as alteracoes no banco
     db.commit()
 

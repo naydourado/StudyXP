@@ -1,0 +1,165 @@
+.foco-page {
+  width: 100%;
+  padding: 42px 18px;
+}
+
+.foco-top {
+  margin-bottom: 42px;
+}
+
+.foco-top h1 {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.foco-top p {
+  color: #555;
+  font-size: 15px;
+}
+
+.foco-content {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+}
+
+.timer-card {
+  background: #ffffff;
+  border-radius: 18px;
+  min-height: 420px;
+  padding: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-ring {
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 54px;
+  position: relative;
+  transition: background 1s linear;
+}
+
+.timer-inner {
+  width: 195px;
+  height: 195px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.timer-inner strong {
+  display: block;
+  font-size: 48px;
+  font-weight: 800;
+}
+
+.timer-inner span {
+  color: #555;
+  font-size: 14px;
+}
+
+.timer-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.timer-actions button {
+  height: 52px;
+  padding: 0 24px;
+  border-radius: 14px;
+  background: linear-gradient(
+    90deg,
+    #2b159c,
+    #546cff
+  );
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer-actions .reset-btn {
+  background: #eef2ff;
+  color: #333;
+}
+
+.focus-side-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px;
+}
+
+.focus-side-card h2 {
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+
+.preset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preset-btn {
+  height: 46px;
+  border-radius: 12px;
+  background: #dfe8ff;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #111;
+  font-weight: 500;
+}
+
+.preset-btn.active {
+  background: linear-gradient(
+    90deg,
+    #2b159c,
+    #63c7ec
+  );
+  color: #ffffff;
+}
+
+.today-focus {
+  margin-top: 16px;
+  background: #dfe8ff;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.today-focus span {
+  font-size: 13px;
+  color: #555;
+}
+
+.today-focus strong {
+  display: block;
+  font-size: 25px;
+  margin: 8px 0 4px;
+}
+
+.today-focus p {
+  color: #555;
+  font-size: 13px;
+}
+
+.focus-message {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #16a34a;
+  font-weight: 600;
+}
