@@ -36,9 +36,10 @@ class UsuarioUpdate(BaseModel):
     email: EmailStr | None = None
 
 
+# schema para alteração de senha
 class AlterarSenha(BaseModel):
-    senha_atual: str = Field(min_length=6, max_length=72)
-    nova_senha: str = Field(min_length=6, max_length=72)
+    senha_atual: str
+    nova_senha: str
 
 
 # schema base das tarefas

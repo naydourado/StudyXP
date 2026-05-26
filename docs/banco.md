@@ -1,140 +1,126 @@
-# Modelagem do Banco de Dados — StudyXP
+# Banco de Dados
 
-## 1. Visão Geral
+O StudyXP utiliza MySQL como sistema gerenciador de banco de dados.
 
-O banco de dados do StudyXP foi desenvolvido utilizando MySQL e modelado através do SQLAlchemy.
+O acesso é realizado através do SQLAlchemy ORM, permitindo manipulação dos dados por objetos Python e reduzindo a necessidade de comandos SQL diretos.
 
-A estrutura foi organizada para armazenar usuários, tarefas, registros emocionais e sessões de foco, permitindo suporte às funcionalidades acadêmicas e gamificadas do sistema.
+# Visão Geral
 
-O modelo segue relacionamentos do tipo 1:N (um para muitos), permitindo que um usuário possua múltiplos registros associados.
+O banco foi estruturado para armazenar informações relacionadas à conta do usuário e suas atividades dentro da plataforma.
 
----
+Principais entidades:
 
-## 2. Entidades do Sistema
+- Usuarios
+- Tarefas
+- Registro de Humor
+- Sessao de Foco
+- Historico de Acessos
 
-Atualmente o banco possui quatro entidades principais:
+# Modelo Conceitual
 
-- usuarios
-- tarefas
-- registros_humor
-- sessoes_foco
-
-Cada entidade representa uma área funcional do sistema.
-
----
-
-## 3. Tabela: usuarios
-
-Responsável pelo armazenamento das informações do usuário e progresso geral.
-
-Campos:
-
-| Campo | Tipo | Descrição |
-|---|---|---|
-| id | Integer | Identificador do usuário |
-| nome | String | Nome do usuário |
-| email | String | Email único |
-| senha | String | Senha criptografada |
-| xp | Integer | Experiência acumulada |
-| nivel | Integer | Nível do usuário |
-| data_criacao | DateTime | Data de cadastro |
-
-### Regras
-
-- Email deve ser único.
-- Senha é armazenada utilizando hash bcrypt.
-- XP inicia em 0.
-- Nível inicia em 1.
-- Data de criação é registrada automaticamente.
-
----
-
-## 4. Tabela: tarefas
-
-Responsável pelo gerenciamento das tarefas acadêmicas.
-
-Campos:
-
-| Campo | Tipo | Descrição |
-|---|---|---|
-| id | Integer | Identificador da tarefa |
-| titulo | String | Título da tarefa |
-| descricao | String | Descrição opcional |
-| prioridade | String | Prioridade da tarefa |
-| status | String | Situação da tarefa |
-| xp_recompensa | Integer | XP obtido ao concluir |
-| data_criacao | DateTime | Data da criação |
-| usuario_id | FK | Usuário dono da tarefa |
-
-### Regras
-
-- Cada tarefa pertence a um usuário.
-- Apenas o dono pode editar ou excluir.
-- Status inicial:
+Relacionamentos principais:
 
 ```txt
-pendente
+Usuario
+│
+├── Tarefas
+├── Registros de Humor
+├── Sessões de Foco
+└── Histórico de Acessos
 ```
 
-- Ao concluir:
+Cada usuário possui seus próprios dados e registros.
 
-```txt
-status = concluida
-+ xp
-```
+# Tabela: usuarios
 
-Valores comuns de prioridade:
-
-```txt
-baixa
-media
-alta
-```
-
-Valores de status:
-
-```txt
-pendente
-concluida
-```
-
----
-
-## 5. Tabela: registros_humor
-
-Responsável pelo registro emocional do estudante.
+Armazena informações básicas da conta e progresso do estudante.
 
 Campos:
 
 | Campo | Tipo | Descrição |
 |---|---|---|
 | id | Integer | Identificador |
-| humor | String | Estado emocional |
-| observacao | String | Comentário opcional |
-| data_registro | DateTime | Data do registro |
-| usuario_id | FK | Dono do registro |
+| nome | String | Nome do usuário |
+| email | String | Email único |
+| senha | String | Senha criptografada |
+| xp | Integer | XP acumulado |
+| nivel | Integer | Nível atual |
+| ultimo_acesso | DateTime | Último login |
+| sequencia_dias | Integer | Dias consecutivos |
+| data_criacao | DateTime | Data de cadastro |
 
-### Regras
-
-- Cada registro pertence a um usuário.
-- Apenas o próprio usuário visualiza seus registros.
-- O registro é armazenado com data automática.
-
-Exemplos de humor:
+Exemplo:
 
 ```txt
-feliz
-motivado
-cansado
-ansioso
-estressado
+1 | Nayra | nayra@email.com | XP 50 | Nivel 1
 ```
 
----
+# Tabela: tarefas
 
-## 6. Tabela: sessoes_foco
+Responsável pelo gerenciamento das tarefas do usuário.
 
-Responsável pelo armazenamento das sessões de estudo.
+Relacionamento:
+
+```txt
+Muitos para Um
+tarefas → usuarios
+```
+
+Campos:
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | Integer | Identificador |
+| titulo | String | Nome da tarefa |
+| descricao | String | Descrição |
+| prioridade | String | Baixa, média ou alta |
+| status | String | Pendente ou concluída |
+| xp_recompensa | Integer | XP gerado |
+| usuario_id | Integer | FK usuário |
+
+Exemplo:
+
+```txt
+Estudar Redes | Alta | Pendente | 30 XP
+```
+
+# Tabela: registro_humor
+
+Armazena emoções e observações relacionadas ao estudo.
+
+Relacionamento:
+
+```txt
+Muitos para Um
+registro_humor → usuarios
+```
+
+Campos:
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | Integer | Identificador |
+| humor | String | Emoção |
+| observacao | Text | Comentário |
+| data_registro | DateTime | Data |
+| usuario_id | Integer | FK usuário |
+
+Exemplo:
+
+```txt
+feliz | "Dia produtivo"
+```
+
+# Tabela: sessao_foco
+
+Responsável pelo histórico Pomodoro.
+
+Relacionamento:
+
+```txt
+Muitos para Um
+sessao_foco → usuarios
+```
 
 Campos:
 
@@ -142,138 +128,80 @@ Campos:
 |---|---|---|
 | id | Integer | Identificador |
 | tempo_minutos | Integer | Tempo estudado |
-| data_sessao | DateTime | Data da sessão |
-| usuario_id | FK | Dono da sessão |
+| data_registro | DateTime | Registro |
+| usuario_id | Integer | FK usuário |
 
-### Regras
-
-- Cada sessão pertence a um usuário.
-- O tempo é armazenado em minutos.
-- Os registros alimentam o dashboard.
-- O usuário acessa apenas suas próprias sessões.
-
----
-
-## 7. Relacionamentos
-
-O modelo atual utiliza relacionamentos 1:N.
-
-### Usuario → Tarefas
-
-Um usuário pode possuir várias tarefas.
+Exemplo:
 
 ```txt
-1 usuario
-↓
-N tarefas
+25 minutos
 ```
 
----
+# Tabela: historico_acessos
 
-### Usuario → Humor
+Controla acessos e sequência de estudos.
 
-Um usuário pode possuir vários registros emocionais.
+Relacionamento:
 
 ```txt
-1 usuario
-↓
-N registros_humor
+Muitos para Um
+historico_acessos → usuarios
 ```
 
----
+Campos:
 
-### Usuario → Foco
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | Integer | Identificador |
+| data_acesso | DateTime | Momento do acesso |
+| usuario_id | Integer | FK usuário |
 
-Um usuário pode possuir várias sessões de foco.
+Essa tabela é utilizada para cálculo da sequência diária.
+
+# Integridade e Relacionamentos
+
+O banco utiliza chaves estrangeiras para garantir integridade referencial.
+
+Exemplo:
+
+Uma tarefa não pode existir sem estar vinculada a um usuário.
+
+Relacionamentos:
 
 ```txt
-1 usuario
-↓
-N sessoes_foco
+usuarios 1:N tarefas
+usuarios 1:N registro_humor
+usuarios 1:N sessao_foco
+usuarios 1:N historico_acessos
 ```
 
----
+# SQLAlchemy ORM
 
-## 8. Chaves Primárias e Estrangeiras
+O projeto utiliza ORM para:
 
-### Primary Keys (PK)
+- Criar entidades
+- Relacionar tabelas
+- Executar consultas
+- Inserir registros
+- Atualizar dados
+- Remover informações
 
-Identificadores únicos de cada tabela.
+Exemplo:
 
-```txt
-usuarios.id
-tarefas.id
-registros_humor.id
-sessoes_foco.id
+```python
+usuario.tarefas
 ```
 
----
+Esse mecanismo melhora organização e manutenção do código.
 
-### Foreign Keys (FK)
+# Considerações
 
-Responsáveis pelos relacionamentos entre tabelas.
+A estrutura do banco foi planejada para:
 
-```txt
-tarefas.usuario_id
-→ usuarios.id
+- Separação clara dos dados
+- Escalabilidade
+- Facilidade de manutenção
+- Segurança
+- Integração com FastAPI e SQLAlchemy
 
-registros_humor.usuario_id
-→ usuarios.id
-
-sessoes_foco.usuario_id
-→ usuarios.id
-```
-
-As FKs garantem integridade referencial e impedem registros órfãos.
-
----
-
-## 9. DER Conceitual Atual
-
-Representação simplificada do modelo:
-
-```txt
-USUARIOS
-│
-├── TAREFAS
-├── REGISTROS_HUMOR
-└── SESSOES_FOCO
-```
-
-Modelo relacional:
-
-```txt
-usuarios (1)
-        |
-        |----< tarefas (N)
-
-usuarios (1)
-        |
-        |----< registros_humor (N)
-
-usuarios (1)
-        |
-        |----< sessoes_foco (N)
-```
-
----
-
-## 10. Considerações Técnicas
-
-O banco foi estruturado priorizando:
-
-- normalização
-- integridade relacional
-- segurança dos dados
-- facilidade de manutenção
-- expansão futura
-
-A estrutura atual permite inclusão posterior de novas entidades, como:
-
-- conquistas
-- ranking
-- metas
-- calendário
-- notificações
-
-Essa modelagem busca equilíbrio entre simplicidade inicial e escalabilidade futura do sistema.
+O modelo permite expansão futura com novas funcionalidades e módulos.

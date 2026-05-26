@@ -16,11 +16,6 @@
   justify-content: space-between;
 }
 
-.sidebar-logo {
-  width: 70%;
-  margin-bottom: 50px;
-}
-
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -84,4 +79,53 @@
 .content {
   flex: 1;
   padding: 34px;
+}
+
+.logo-button {
+  background: transparent;
+  color: #3b82f6;
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 50px;
+  cursor: pointer;
+}
+
+.sidebar {
+  transition: width 0.25s ease, min-width 0.25s ease;
+}
+
+.sidebar-nav a span,
+.logout-btn span,
+.logo-button {
+  transition: 0.2s ease;
+}
+
+.app-layout.sidebar-closed .sidebar {
+  width: 86px;
+  min-width: 86px;
+  padding: 34px 18px;
+}
+
+.app-layout.sidebar-closed .logo-button {
+  font-size: 22px;
+  width: 100%;
+  text-align: center;
+}
+
+.app-layout.sidebar-closed .sidebar-nav a,
+.app-layout.sidebar-closed .logout-btn {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  justify-content: center;
+}
+
+.app-layout.sidebar-closed .sidebar-nav a span,
+.app-layout.sidebar-closed .logout-btn span {
+  display: none;
+}
+
+.app-layout.sidebar-closed .sidebar-nav a svg,
+.app-layout.sidebar-closed .logout-btn svg {
+  font-size: 21px;
 }

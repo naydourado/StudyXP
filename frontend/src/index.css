@@ -33,3 +33,160 @@ button {
 #root {
   min-height: 100vh;
 }
+
+/* responsividade geral */
+
+img,
+svg {
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid,
+  .tarefas-columns,
+  .foco-content,
+  .humor-content,
+  .perfil-top-grid,
+  .progresso-grid,
+  .summary-row,
+  .achievements-grid,
+  .conquistas-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .level-card {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .settings-card,
+  .account-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .sidebar-logo {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+  }
+
+  .sidebar-nav a {
+    min-width: max-content;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .logout-btn {
+    margin-top: 16px;
+  }
+
+  .content {
+    padding: 16px 0;
+  }
+
+  .dashboard-top,
+  .tarefas-top,
+  .perfil-header,
+  .config-header {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .form-row,
+  .profile-stats,
+  .humor-options,
+  .priority-options {
+    grid-template-columns: 1fr !important;
+  }
+
+  .timer-card,
+  .focus-side-card,
+  .profile-summary-card,
+  .profile-info-card,
+  .achievements-card,
+  .settings-card,
+  .account-card {
+    padding: 22px;
+  }
+
+  .timer-ring {
+    width: 200px;
+    height: 200px;
+  }
+
+  .timer-inner {
+    width: 168px;
+    height: 168px;
+  }
+
+  .timer-inner strong {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 26px !important;
+  }
+
+  h2 {
+    font-size: 20px !important;
+  }
+
+  .auth-card,
+  .task-modal,
+  .senha-box,
+  .delete-modal {
+    width: 92%;
+  }
+
+  .xp-info,
+  .level-info,
+  .setting-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .timer-actions,
+  .modal-actions,
+  .account-actions,
+  .delete-actions {
+    flex-direction: column;
+  }
+
+  .timer-actions button,
+  .modal-actions button,
+  .account-actions button,
+  .delete-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}

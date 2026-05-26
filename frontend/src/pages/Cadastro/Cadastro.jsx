@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import Logo from "../../assets/StudyXP.png";
 import "../../components/AuthCard/AuthCard.css";
 
 function Cadastro() {
@@ -40,7 +41,7 @@ function Cadastro() {
   return (
     <main className="auth-page">
       <section className="auth-card">
-        <h1 className="logo">STUDYXP</h1>
+        <img className="logo" src={Logo} alt="Logo StudyXP" />
 
         <h2>Criar Conta</h2>
         <p className="subtitle">Transforme seus estudos em XP.</p>

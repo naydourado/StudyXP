@@ -12,7 +12,7 @@ from app.schemas import (
 )
 from datetime import datetime, UTC
 from app.security import gerar_hash_senha, verificar_senha, criar_token_acesso, get_usuario_logado
-from app.models import HistoricoAcesso
+from app.models import Usuario, Tarefa, RegistroHumor, SessaoFoco, HistoricoAcesso
 
 
 # APIRouter() - separa rotas por arquivo
@@ -176,37 +176,59 @@ def editar_perfil(
     return usuario_logado
 
 
-# rota para alterar senha do usuario logado
-@router.put(
-    "/senha",
-    response_model=MensagemResponse
-)
+# rota para alterar senha do usuário logado
+@router.put("/alterar-senha")
 def alterar_senha(
     dados: AlterarSenha,
     db: Session = Depends(get_db),
-    usuario_logado: Usuario = Depends(get_usuario_logado)
+    usuario=Depends(get_usuario_logado)
 ):
-
-    # verifica se a senha atual esta correta
-    senha_valida = verificar_senha(
+    # verifica se senha atual está correta
+    if not verificar_senha(
         dados.senha_atual,
-        usuario_logado.senha
-    )
-
-    if not senha_valida:
+        usuario.senha
+    ):
         raise HTTPException(
             status_code=400,
-            detail="senha atual incorreta"
+            detail="Senha atual incorreta."
         )
 
     # gera hash da nova senha
-    usuario_logado.senha = gerar_hash_senha(
+    usuario.senha = gerar_hash_senha(
         dados.nova_senha
     )
 
-    # salva no banco
     db.commit()
 
     return {
-        "mensagem": "senha alterada com sucesso"
+        "mensagem": "Senha alterada com sucesso."
+    }
+
+# rota para excluir a conta do usuario logado
+@router.delete("/perfil")
+def excluir_conta(
+    db: Session = Depends(get_db),
+    usuario_logado: Usuario = Depends(get_usuario_logado)
+):
+    db.query(Tarefa).filter(
+        Tarefa.usuario_id == usuario_logado.id
+    ).delete()
+
+    db.query(RegistroHumor).filter(
+        RegistroHumor.usuario_id == usuario_logado.id
+    ).delete()
+
+    db.query(SessaoFoco).filter(
+        SessaoFoco.usuario_id == usuario_logado.id
+    ).delete()
+
+    db.query(HistoricoAcesso).filter(
+        HistoricoAcesso.usuario_id == usuario_logado.id
+    ).delete()
+
+    db.delete(usuario_logado)
+    db.commit()
+
+    return {
+        "mensagem": "Conta excluida com sucesso."
     }

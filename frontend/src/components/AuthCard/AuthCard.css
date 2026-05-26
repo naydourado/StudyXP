@@ -7,7 +7,7 @@
 }
 
 .auth-card {
-  width: 40%;
+  width: 33%;
   background: #ffffff;
   border-radius: 18px;
   padding: 36px 44px;
@@ -15,12 +15,13 @@
 }
 
 .logo {
-    width: 40%;
+    width: 25%;
     margin-bottom: 20px;
 }
 
 .auth-card h2 {
-  font-size: 26px;
+  font-size: 34px;
+  font-weight: 600;
   margin-bottom: 4px;
 }
 
