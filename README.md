@@ -207,8 +207,11 @@ O projeto utiliza MySQL.
 Configure o arquivo `.env` com suas credenciais:
 
 ```env
-DATABASE_URL=mysql+pymysql://usuario:senha@localhost/studyxp
-SECRET_KEY=sua_chave
+DB_HOST=localhost # onde o banco está rodando (local)
+DB_USER=root # usuário do MySQL
+DB_PASSWORD=root # senha do MySQL
+DB_NAME=studyxp # nome do banco criado no MySQL
+SECRET_KEY=studyxp_chave_secreta
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 ```
