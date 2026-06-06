@@ -147,18 +147,6 @@ Instale dependências:
 npm install
 ```
 
-# Variáveis do Frontend
-
-Crie um arquivo `.env`.
-
-Exemplo:
-
-```env
-VITE_API_URL=http://127.0.0.1:8000
-```
-
-Essa variável define a URL da API utilizada pelo frontend.
-
 # Executando o Frontend
 
 Execute:
@@ -189,12 +177,6 @@ react-icons
 vite
 ```
 
-Instalação manual:
-
-```bash
-npm install
-```
-
 ## Backend
 
 Principais dependências:
@@ -208,12 +190,6 @@ python-jose
 passlib
 python-dotenv
 bcrypt
-```
-
-Instalação:
-
-```bash
-pip install -r requirements.txt
 ```
 
 # Verificando a Instalação
@@ -235,66 +211,3 @@ http://localhost:5173
 ```
 
 exibir a tela de login.
-
-# Problemas Comuns
-
-## Porta ocupada
-
-Erro:
-
-```txt
-Address already in use
-```
-
-Solução:
-
-Finalizar processos anteriores ou alterar porta.
-
-Backend:
-
-```bash
-uvicorn app.main:app --reload --port 8001
-```
-
-Frontend:
-
-```bash
-npm run dev -- --port 5174
-```
-
-## Erro de conexão MySQL
-
-Verificar:
-
-- XAMPP iniciado
-- Banco criado
-- DATABASE_URL correta
-- Usuário e senha válidos
-
-## Dependência não encontrada
-
-Exemplo:
-
-```txt
-ModuleNotFoundError
-```
-
-Solução:
-
-Reinstalar:
-
-```bash
-pip install -r requirements.txt
-```
-
-ou:
-
-```bash
-npm install
-```
-
-# Considerações
-
-O projeto foi estruturado para desenvolvimento local utilizando FastAPI, React e MySQL.
-
-Após instalação, novas funcionalidades podem ser desenvolvidas mantendo a mesma estrutura do sistema.

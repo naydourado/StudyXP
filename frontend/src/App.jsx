@@ -9,6 +9,7 @@ import Foco from "./pages/Foco/Foco";
 import Humor from "./pages/Humor/Humor";
 import Perfil from "./pages/Perfil/Perfil";
 import Configuracoes from "./pages/Configuracoes/Configuracoes";
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/humor" element={<Humor />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/configuracoes" element={<Configuracoes />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

@@ -74,17 +74,6 @@ def buscar_dashboard(
     ).limit(2).all()
 
     # busca acessos da ultima semana
-    hoje = datetime.now().date()
-    inicio_semana = hoje - timedelta(days=6)
-
-    acessos_semana = db.query(
-        HistoricoAcesso
-    ).filter(
-        HistoricoAcesso.usuario_id == usuario_logado.id,
-        HistoricoAcesso.data_acesso >= inicio_semana
-    ).all()
-
-    # busca acessos da ultima semana
     hoje = datetime.now(UTC).date()
     inicio_semana = hoje - timedelta(days=6)
 
@@ -93,13 +82,17 @@ def buscar_dashboard(
         HistoricoAcesso.data_acesso >= inicio_semana
     ).all()
 
-    # converte os acessos para o padrao do front
-    # front: domingo=0, segunda=1, ..., sabado=6
     dias_ativos = []
 
     for acesso in acessos_semana:
-        dia_python = acesso.data_acesso.weekday()
-        dia_front = (dia_python + 1) % 7
+        dia_semana = acesso.data_acesso.isoweekday()
+
+        # converte para o padrao do front:
+        # domingo=0, segunda=1, ..., sabado=6
+        if dia_semana == 7:
+            dia_front = 0
+        else:
+            dia_front = dia_semana
 
         if dia_front not in dias_ativos:
             dias_ativos.append(dia_front)

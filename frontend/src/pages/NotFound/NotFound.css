@@ -1,0 +1,30 @@
+.notfound-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  background: #edf2ff;
+}
+
+.notfound-page h1 {
+  font-size: 96px;
+  color: #4f46e5;
+}
+
+.notfound-page h2 {
+  color: #1f2937;
+}
+
+.notfound-page p {
+  color: #6b7280;
+}
+
+.back-home {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: #4f46e5;
+  color: white;
+  text-decoration: none;
+}
