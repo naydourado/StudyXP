@@ -6,14 +6,14 @@ Essa separação facilita manutenção, escalabilidade e organização do códig
 
 # Visão Geral
 
-O sistema é composto por três principais camadas:
+O sistema é composto por três principais camadas, com dois clientes:
 
 ```txt
-Frontend (React)
-↓
-API REST (FastAPI)
-↓
-Banco de Dados (MySQL)
+Web (React)      App Mobile (React Native / Expo)
+        \          /
+      API REST (FastAPI)
+              ↓
+     Banco de Dados (MySQL)
 ```
 
 O frontend é responsável pela interface e experiência do usuário.
@@ -123,9 +123,10 @@ Fluxo:
 
 1. Usuário realiza login
 2. Backend valida credenciais
-3. Token JWT é gerado
-4. Token é armazenado no navegador
+3. São gerados um access token JWT (15 minutos) e um refresh token (30 dias)
+4. O access token fica só em memória; o refresh token fica em cookie HttpOnly (web) ou no SecureStore do celular (mobile)
 5. Requisições autenticadas enviam Authorization Bearer Token
+6. Quando o access token vence, o cliente renova a sessão com o refresh token (que é trocado a cada uso)
 
 Esse mecanismo protege rotas privadas e garante controle de acesso.
 

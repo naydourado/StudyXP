@@ -3,235 +3,110 @@
 
 StudyXP é uma plataforma acadêmica voltada para organização dos estudos e produtividade.
 
-O sistema permite que estudantes acompanhem tarefas, registrem humor, utilizem sessões de foco (Pomodoro) e acompanhem sua evolução por meio de um sistema de XP e níveis.
+O sistema permite que estudantes acompanhem tarefas, registrem humor, utilizem sessões de foco (Pomodoro) e acompanhem sua evolução por meio de um sistema de XP, níveis, ofensiva e conquistas.
 
-# Tecnologias Utilizadas
+Disponível em versão **web** (React) e **mobile** (React Native / Expo), as duas consumindo a mesma **API** (FastAPI).
 
-## Frontend
+# Tecnologias
 
-- React
-- Vite
-- React Router DOM
-- Axios
-- React Icons
-- CSS
-
-## Backend
-
-- FastAPI
-- SQLAlchemy
-- JWT Authentication
-- Passlib
-- PyMySQL
-- MySQL
+| Camada | Tecnologias |
+|---|---|
+| API (`backend/`) | Python, FastAPI, SQLAlchemy 2, Alembic, PyJWT, Argon2 (pwdlib), SlowAPI, MySQL 8 |
+| Web (`frontend/`) | React 19, Vite, React Router, Axios, Recharts, React Icons |
+| Mobile (`mobile/`) | React Native, Expo SDK 58, Expo Router, Expo SecureStore |
+| Qualidade | pytest, Ruff, ESLint, TypeScript, GitHub Actions, Dependabot |
+| Infra | Docker, Render (API), Aiven (MySQL), Vercel (web), EAS Build (APK) |
 
 # Funcionalidades
 
-## Autenticação
-
-O sistema possui autenticação baseada em JWT, permitindo:
-
-- Cadastro de usuários
-- Login seguro
-- Controle de sessão
-- Logout
-- Alteração de senha
-- Exclusão da conta
-
-## Dashboard
-
-O dashboard reúne as principais informações do usuário em uma única tela, incluindo:
-
-- Saudação personalizada
-- Tarefas do dia
-- Sequência de estudos
-- Sistema de XP e nível
-- Sessão de foco
-- Último registro de humor
-
-## Sistema de Tarefas
-
-O módulo de tarefas permite:
-
-- Criar tarefas
-- Editar informações
-- Excluir tarefas
-- Marcar como concluídas
-- Retornar tarefas para pendente
-- Ganhar XP de acordo com a prioridade
-- Organizar atividades por status
-
-## Progresso
-
-A página de progresso apresenta indicadores da evolução do usuário, como:
-
-- XP acumulado
-- Quantidade de tarefas concluídas
-- Sequência de estudos
-- Tempo dedicado às sessões de foco
-- Evolução geral do desempenho
-
-## Sessão de Foco
-
-O sistema utiliza o método Pomodoro para auxiliar nos estudos, oferecendo:
-
-- Temporizador funcional
-- Registro automático das sessões
-- Controle do tempo estudado
-- Integração com XP e progresso
-
-## Registro de Humor
-
-O usuário pode registrar seu humor e acompanhar padrões relacionados aos estudos por meio de:
-
-- Seleção de emoções
-- Observações diárias
-- Histórico de registros
-- Integração com o dashboard
-
-## Perfil
-
-A área de perfil permite visualizar e atualizar informações pessoais, além de acompanhar:
-
-- Dados do usuário
-- Progresso de XP
-- Nível atual
-- Sistema de conquistas
-
-## Configurações
-
-A página de configurações reúne opções relacionadas à conta e preferências do sistema, incluindo:
-
-- Preferências do usuário
-- Alteração de senha
-- Exclusão de conta
+- **Conta:** cadastro (com aceite dos Termos e confirmação de 18+), login, sessão com renovação automática, esqueci minha senha (link por e-mail), alteração de senha, exclusão de conta.
+- **Tarefas:** criar, editar, excluir, prazo, prioridade, concluir e reabrir. O XP é definido pelo servidor (baixa 20, média 50, alta 80).
+- **Foco (Pomodoro):** predefinições 25/5/15/50 min, sessão registrada no servidor, 1 XP por minuto de foco.
+- **Humor:** registro com consentimento (dado sensível), nota criptografada, histórico.
+- **Gamificação:** XP, níveis com curva crescente, ofensiva (dias seguidos) e conquistas.
+- **Progresso:** XP da semana e tarefas por dia em gráficos.
+- **Notificações:** aviso de fim do Pomodoro, lembretes push de prazo (véspera e dia) e resumo semanal por e-mail.
+- **LGPD:** exportar meus dados, revogar consentimento, excluir conta, limpeza automática de logs antigos, Política de Privacidade e Termos de Uso.
 
 # Estrutura do Projeto
 
 ```txt
 StudyXP/
-│
-├── backend/
+├── backend/            API FastAPI
 │   ├── app/
-│   │   ├── routes/
-│   │   ├── database.py
-│   │   ├── main.py
-│   │   ├── models.py
-│   │   ├── schemas.py
-│   │   └── security.py
-│   │
-│   ├── env/
-│   ├── .env
-│   └── requirements.txt
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── main.jsx
-│
-├── docs/
-│
-└── README.md
+│   │   ├── core/       configuração, banco, segurança, erros
+│   │   ├── models/     tabelas (SQLAlchemy)
+│   │   ├── schemas/    validação (Pydantic)
+│   │   ├── routers/    rotas da API v1
+│   │   ├── services/   regras de negócio (XP, ofensiva, conquistas)
+│   │   └── main.py
+│   ├── alembic/        migrações do banco
+│   ├── tests/          testes automatizados (pytest)
+│   └── Dockerfile
+├── frontend/           site React (Vite)
+├── mobile/             app React Native (Expo)
+├── docs/               documentação
+├── docker-compose.yml  ambiente local completo (MySQL + API)
+└── .github/            CI (testes, lint, build) e Dependabot
 ```
 
-# Instalação
+# Como rodar
 
-## Backend
-
-Entre na pasta:
+O passo a passo completo está em [docs/instalacao.md](docs/instalacao.md). Resumo:
 
 ```bash
-cd backend
-```
-
-Ative o ambiente virtual.
-
-Windows:
-
-```bash
-env\Scripts\activate
-```
-
-Instale as dependências:
-
-```bash
-pip install -r requirements.txt
-```
-
-Execute o servidor:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Backend disponível em:
-
-```txt
-http://127.0.0.1:8000
-```
-
-## Frontend
-
-Entre na pasta:
-
-```bash
-cd frontend
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Execute:
-
-```bash
-npm run dev
-```
-
-Frontend disponível em:
-
-```txt
-http://localhost:5173
-```
-
-# Banco de Dados
-
-O projeto utiliza MySQL.
-
-Configure o arquivo `.env` com suas credenciais:
-
-```env
-DB_HOST=localhost # onde o banco está rodando (local)
-DB_USER=root # usuário do MySQL
-DB_PASSWORD=root # senha do MySQL
-DB_NAME=studyxp # nome do banco criado no MySQL
-SECRET_KEY=studyxp_chave_secreta
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-```
-
 # API
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-dev.txt
+copy .env.example .env      # preencha (veja docs/instalacao.md)
+alembic upgrade head
+uvicorn app.main:app --reload
 
-A documentação automática do FastAPI pode ser acessada em:
+# Web (outro terminal)
+cd frontend
+npm install
+npm run dev                 # http://localhost:5173
 
-```txt
-http://127.0.0.1:8000/docs
+# Mobile (outro terminal)
+cd mobile
+npm install
+npm start                   # abra com o Expo Go
 ```
 
-# Interface
+Documentação da API (Swagger): http://127.0.0.1:8000/docs
 
-O StudyXP possui interface baseada em cards e design focado em produtividade, incluindo:
+# Testes
 
-- Dashboard
-- Tarefas
-- Progresso
-- Sessão de Foco
-- Registro de Humor
-- Perfil
-- Configurações
+| Parte | Testes | Comando |
+|---|---|---|
+| API | 67 testes, 95% de cobertura | `cd backend && pytest --cov=app` |
+| Web — unidade | 29 testes | `cd frontend && npm test` |
+| Web — ponta a ponta e acessibilidade (desktop e celular) | 46 testes | `cd frontend && npm run test:e2e` |
+| Mobile | 17 testes | `cd mobile && npm test` |
+
+Os testes ponta a ponta sobem uma API e um site próprios (portas 8001 e 5174). Sem o Chromium do Playwright, use o
+navegador instalado: `PW_CANAL=msedge npm run test:e2e` (ou `chrome`).
+
+O CI (GitHub Actions) roda tudo isso a cada pull request. Os testes que precisam de uma pessoa estão em
+[docs/testes/testes-manuais.md](docs/testes/testes-manuais.md).
+
+# Documentação
+
+| Documento | Conteúdo |
+|---|---|
+| [docs/instalacao.md](docs/instalacao.md) | Como rodar tudo localmente |
+| [docs/api.md](docs/api.md) | Rotas da API v1 |
+| [docs/backend.md](docs/backend.md) | Arquitetura e regras de negócio |
+| [docs/banco.md](docs/banco.md) | Tabelas e migrações |
+| [docs/legal/](docs/legal/) | Política de Privacidade e Termos de Uso. Edite só `conteudo.json` e rode `node scripts/sincronizar-legal.mjs` (atualiza site, app e .md) |
+| [docs/lgpd/ripd-registro-de-humor.md](docs/lgpd/ripd-registro-de-humor.md) | Relatório de impacto do dado sensível |
+| [docs/lgpd/plano-resposta-incidentes.md](docs/lgpd/plano-resposta-incidentes.md) | O que fazer em caso de incidente |
+| [docs/lgpd/riscos-juridicos.md](docs/lgpd/riscos-juridicos.md) | Riscos jurídicos e o que falta decidir |
+| [docs/testes/testes-manuais.md](docs/testes/testes-manuais.md) | Roteiro de testes manuais |
+| [docs/testes/roteiro-uat-sus.md](docs/testes/roteiro-uat-sus.md) | Teste com usuários e questionário SUS |
+
+# Equipe
+
+Brunno Denadai · Emily Modro · Gabriel Rossik · Isabela Rosa · Nayra Dourado (gerente do projeto)
