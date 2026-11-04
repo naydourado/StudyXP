@@ -1,0 +1,266 @@
+{
+  "_aviso": "FONTE UNICA dos textos legais. Edite SOMENTE este arquivo e rode: node scripts/sincronizar-legal.mjs. O script copia para o site e o app e gera os .md. Mudou algo relevante? Suba a 'versao' aqui e a TERMOS_VERSAO da API (todos aceitam de novo).",
+  "versao": "2026-10",
+  "vigente_desde": "22/10/2026",
+  "contato": "[e-mail do canal de privacidade — a definir pelo grupo]",
+  "controlador": "Equipe do Projeto Integrador StudyXP (Brunno Denadai, Emily Modro, Gabriel Rossik, Isabela Rosa e Nayra Dourado), Centro Universitário Adventista de São Paulo — campus Hortolândia (UNASP-HT)",
+  "privacidade": {
+    "titulo": "Política de Privacidade",
+    "resumo": [
+      "Coletamos só o necessário para a sua conta e para as funções que você usa.",
+      "Não usamos publicidade, ferramentas de análise de terceiros, rastreamento nem vendemos dados.",
+      "O registro de humor só é guardado com a sua autorização, e as notas ficam criptografadas.",
+      "Você pode baixar, corrigir ou apagar seus dados a qualquer momento, sem pedir a ninguém."
+    ],
+    "secoes": [
+      {
+        "titulo": "1. Quem somos",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "O StudyXP é uma plataforma gratuita de organização de estudos (site e aplicativo), desenvolvida como Projeto Integrador acadêmico. O controlador dos dados pessoais, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 – LGPD), é: {controlador}." },
+          { "tipo": "paragrafo", "texto": "Canal de privacidade (encarregado): {contato}." }
+        ]
+      },
+      {
+        "titulo": "2. Dados que tratamos",
+        "blocos": [
+          {
+            "tipo": "tabela",
+            "cabecalho": ["Dado", "Para quê", "Base legal (LGPD)", "Por quanto tempo"],
+            "linhas": [
+              ["Nome ou apelido, e-mail e senha (guardada só como hash irreversível)", "Criar e acessar a sua conta e falar com você sobre ela", "Execução de contrato (art. 7º, V)", "Enquanto a conta existir"],
+              ["Bio (opcional)", "Mostrar no seu perfil, visível só para você", "Execução de contrato (art. 7º, V)", "Enquanto a conta existir"],
+              ["Tarefas, sessões de foco, XP, nível, ofensiva e conquistas", "Funcionamento da plataforma", "Execução de contrato (art. 7º, V)", "Enquanto a conta existir"],
+              ["Registros de humor e notas", "Ajudar você a relacionar bem-estar e estudos", "Consentimento específico e destacado (art. 11, I)", "Até você apagar, revogar ou excluir a conta"],
+              ["Preferências de notificação", "Enviar só os avisos que você escolheu", "Execução de contrato (art. 7º, V)", "Enquanto a conta existir"],
+              ["Código de notificação do celular", "Enviar lembretes de prazo ao aplicativo", "Execução de contrato (art. 7º, V)", "Até você sair da conta no aparelho"],
+              ["Endereço IP e data de cada login", "Segurança da conta e prevenção de fraudes", "Legítimo interesse (art. 7º, IX)", "6 meses"],
+              ["Tipo de acesso (site ou aplicativo) e validade das sessões", "Manter você conectado com segurança e permitir encerrar sessões", "Execução de contrato (art. 7º, V)", "Até 30 dias após o fim da sessão"],
+              ["Pedidos de redefinição de senha", "Enviar o link para criar uma senha nova", "Execução de contrato (art. 7º, V)", "Até 1 dia após o vencimento do link"],
+              ["Registro dos seus aceites e revogações", "Comprovar o consentimento e o aceite dos termos", "Cumprimento de obrigação legal (art. 7º, II e art. 8º, § 2º)", "Enquanto a conta existir"]
+            ]
+          }
+        ]
+      },
+      {
+        "titulo": "3. O que não fazemos",
+        "blocos": [
+          {
+            "tipo": "lista",
+            "itens": [
+              "Não pedimos CPF, telefone, endereço, data de nascimento, foto, localização, contatos ou acesso à câmera e ao microfone.",
+              "Não usamos Google Analytics, pixels de redes sociais, mapas de calor nem qualquer ferramenta de análise ou publicidade de terceiros.",
+              "Não rastreamos você em outros sites e aplicativos e não criamos perfis para publicidade.",
+              "Não vendemos, alugamos nem compartilhamos seus dados para fins comerciais.",
+              "Não carregamos fontes, scripts ou imagens de servidores de terceiros no site."
+            ]
+          }
+        ]
+      },
+      {
+        "titulo": "4. Registro de humor (dado sensível)",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Como o humor pode revelar informações sobre saúde, ele é um dado pessoal sensível. Só começamos a guardá-lo depois que você autoriza, na própria tela, de forma específica e destacada. As notas ficam criptografadas no banco de dados e só você tem acesso a elas." },
+          { "tipo": "paragrafo", "texto": "Você pode revogar a autorização em Configurações a qualquer momento. Ao revogar, todos os registros de humor são apagados imediatamente. Usar o StudyXP não depende dessa autorização." },
+          { "tipo": "paragrafo", "texto": "O StudyXP não é um serviço de saúde e não substitui acompanhamento profissional. Se precisar conversar, o CVV atende gratuitamente, 24 horas, pelo telefone 188 ou em cvv.org.br." }
+        ]
+      },
+      {
+        "titulo": "5. Cookies e armazenamento no aparelho",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Usamos apenas o estritamente necessário para o funcionamento do serviço. Não há cookies de publicidade, de análise ou de terceiros, por isso não pedimos consentimento para cookies — apenas informamos aqui, conforme o Guia Orientativo de Cookies da ANPD." },
+          {
+            "tipo": "tabela",
+            "cabecalho": ["Nome", "Onde", "Para quê", "Duração"],
+            "linhas": [
+              ["studyxp_refresh", "Cookie do site (protegido, inacessível a scripts)", "Manter você conectado com segurança", "Até 30 dias ou até sair da conta"],
+              ["studyxp_aviso_cookies", "Armazenamento local do navegador", "Lembrar que você já viu o aviso de cookies", "Até você limpar os dados do navegador"],
+              ["Sessão do aplicativo", "Armazenamento seguro do celular (Keychain/Keystore)", "Manter você conectado no aplicativo", "Até sair da conta ou desinstalar"]
+            ]
+          }
+        ]
+      },
+      {
+        "titulo": "6. Comunicações",
+        "blocos": [
+          {
+            "tipo": "lista",
+            "itens": [
+              "E-mails da conta (como o link de redefinição de senha) são enviados só quando você pede.",
+              "O resumo semanal por e-mail vem desligado e só é enviado se você ligar em Configurações.",
+              "Lembretes de prazo no celular dependem da sua permissão no sistema e podem ser desligados em Configurações.",
+              "Não enviamos propaganda."
+            ]
+          }
+        ]
+      },
+      {
+        "titulo": "7. Com quem os dados são tratados",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Seus dados não são compartilhados com terceiros para uso próprio deles. Eles são processados apenas pelos serviços de infraestrutura que mantêm a plataforma funcionando, que atuam como operadores e seguem nossas instruções:" },
+          {
+            "tipo": "tabela",
+            "cabecalho": ["Operador", "Função"],
+            "linhas": [
+              ["Render", "Servidor da API"],
+              ["Aiven", "Banco de dados"],
+              ["Vercel", "Hospedagem do site"],
+              ["Resend", "Envio de e-mails"],
+              ["Expo", "Entrega de notificações ao aplicativo"],
+              ["GitHub", "Agendamento das tarefas automáticas e cópias de segurança criptografadas"]
+            ]
+          },
+          { "tipo": "paragrafo", "texto": "Alguns desses serviços ficam fora do Brasil (principalmente nos Estados Unidos e na Europa). A transferência internacional é feita para executar o serviço que você pediu (art. 33, IX da LGPD) e com prestadores que adotam medidas de proteção de dados. Também podemos fornecer dados quando houver ordem judicial ou obrigação legal." }
+        ]
+      },
+      {
+        "titulo": "8. Segurança",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Usamos conexão criptografada (HTTPS), senhas com hash Argon2, sessões curtas com renovação segura, limite de tentativas de login, criptografia das notas de humor e cópias de segurança criptografadas. Nenhum sistema é totalmente imune a falhas; se ocorrer um incidente que possa trazer risco ou dano relevante a você, comunicaremos você e a Autoridade Nacional de Proteção de Dados (ANPD) nos prazos da regulamentação." }
+        ]
+      },
+      {
+        "titulo": "9. Seus direitos",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "A LGPD (art. 18) garante a você os direitos abaixo. A maioria pode ser exercida sozinha, na hora, dentro da plataforma:" },
+          {
+            "tipo": "tabela",
+            "cabecalho": ["Direito", "Como exercer"],
+            "linhas": [
+              ["Confirmação, acesso e portabilidade", "Configurações → Exportar meus dados (arquivo JSON com tudo o que guardamos sobre você)"],
+              ["Correção", "Perfil → Editar"],
+              ["Eliminação", "Configurações → Excluir conta (apaga tudo na hora)"],
+              ["Revogação do consentimento", "Configurações → Registro de humor"],
+              ["Oposição, informação sobre compartilhamento e revisão de decisões automatizadas", "Pelo canal de privacidade"]
+            ]
+          },
+          { "tipo": "paragrafo", "texto": "Pedidos pelo canal de privacidade são respondidos em até 15 dias. Você também pode apresentar reclamação à ANPD (www.gov.br/anpd)." },
+          { "tipo": "paragrafo", "texto": "Sobre decisões automatizadas: o XP, o nível, a ofensiva e as conquistas são calculados automaticamente por regras fixas e públicas (descritas nos Termos de Uso). Eles não têm efeito jurídico nem financeiro, mas você pode pedir explicação ou revisão pelo canal de privacidade." }
+        ]
+      },
+      {
+        "titulo": "10. Público",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "O StudyXP é destinado a pessoas com 18 anos ou mais. Não coletamos intencionalmente dados de crianças e adolescentes; se identificarmos uma conta de menor de idade, ela será excluída." }
+        ]
+      },
+      {
+        "titulo": "11. Alterações desta política",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Se esta política mudar de forma relevante, publicaremos a nova versão e pediremos que você a confirme no próximo acesso. A data e a versão vigentes aparecem no topo deste documento." }
+        ]
+      }
+    ]
+  },
+  "termos": {
+    "titulo": "Termos de Uso",
+    "resumo": [
+      "O StudyXP é gratuito, acadêmico e para maiores de 18 anos.",
+      "Use com respeito: nada de tentar acessar dados de outras pessoas ou burlar o sistema.",
+      "XP e conquistas não valem dinheiro.",
+      "O registro de humor não substitui acompanhamento profissional."
+    ],
+    "secoes": [
+      {
+        "titulo": "1. Aceitação",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Ao criar uma conta você declara que leu e aceita estes Termos de Uso e que está ciente da Política de Privacidade. Se não concordar, não use a plataforma." }
+        ]
+      },
+      {
+        "titulo": "2. O serviço",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "O StudyXP oferece organização de tarefas, temporizador de foco (Pomodoro), registro de humor e gamificação (XP, níveis, ofensiva e conquistas), pelo site e pelo aplicativo Android. É um projeto acadêmico do UNASP-HT, oferecido gratuitamente e sem fins comerciais. Responsável: {controlador}." }
+        ]
+      },
+      {
+        "titulo": "3. Quem pode usar",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Pessoas com 18 anos ou mais, que informem um e-mail válido de que sejam titulares. Cada pessoa deve ter uma única conta." }
+        ]
+      },
+      {
+        "titulo": "4. Sua conta",
+        "blocos": [
+          { "tipo": "lista", "itens": [
+            "Mantenha sua senha em segredo; você é responsável pelo uso da sua conta.",
+            "Se suspeitar de acesso indevido, troque a senha imediatamente (isso encerra as sessões nos outros aparelhos) e avise pelo canal de contato.",
+            "Mantenha seus dados corretos; você pode editá-los no Perfil."
+          ] }
+        ]
+      },
+      {
+        "titulo": "5. Uso aceitável",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "É proibido:" },
+          { "tipo": "lista", "itens": [
+            "tentar acessar dados de outras pessoas, explorar falhas de segurança ou sobrecarregar o serviço;",
+            "usar robôs ou automações para ganhar XP ou criar contas;",
+            "armazenar conteúdo ilegal, ofensivo, discriminatório ou que viole direitos de terceiros;",
+            "inserir dados pessoais de outras pessoas sem necessidade (por exemplo, nas notas de humor ou nas tarefas)."
+          ] },
+          { "tipo": "paragrafo", "texto": "Se você encontrar uma falha de segurança, avise pelo canal de contato em vez de explorá-la. Agradecemos." }
+        ]
+      },
+      {
+        "titulo": "6. Seu conteúdo",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Tarefas, notas e bio continuam sendo seus. Você nos autoriza a armazená-los e exibi-los só para você, apenas para prestar o serviço. Nenhum conteúdo seu é público ou visto por outros usuários." }
+        ]
+      },
+      {
+        "titulo": "7. Gamificação",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "XP, níveis, ofensiva e conquistas não têm valor monetário, não podem ser trocados ou transferidos e podem ser recalculados para corrigir erros ou abusos. Regras atuais: tarefa concluída vale 20, 50 ou 80 XP conforme a prioridade (até 15 tarefas pontuando por dia); 1 XP por minuto de foco (até 240 XP por dia); 5 XP no primeiro registro de humor do dia." }
+        ]
+      },
+      {
+        "titulo": "8. Bem-estar",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "O registro de humor é uma ferramenta de autoconhecimento. O StudyXP não oferece diagnóstico, tratamento ou orientação de saúde e não substitui médicos ou psicólogos. Em caso de sofrimento, procure ajuda profissional ou o CVV (188, 24 horas)." }
+        ]
+      },
+      {
+        "titulo": "9. Disponibilidade",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Por ser um projeto acadêmico hospedado em serviços gratuitos, o StudyXP pode ficar lento no primeiro acesso, passar por interrupções ou ser encerrado ao final do projeto. Se o serviço for encerrado, avisaremos com antecedência para que você possa exportar seus dados, que depois serão apagados. Recomendamos exportar seus dados periodicamente." }
+        ]
+      },
+      {
+        "titulo": "10. Propriedade intelectual",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "O nome, a marca, o visual e o código do StudyXP pertencem aos seus autores. Você pode usar a plataforma para uso pessoal, mas não pode copiar, modificar ou redistribuir esses elementos sem autorização. Componentes de código aberto usados no projeto seguem as suas próprias licenças." }
+        ]
+      },
+      {
+        "titulo": "11. Responsabilidade",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Adotamos as medidas de segurança e cuidado descritas na Política de Privacidade. Por ser um serviço gratuito e experimental, não garantimos que ele estará sempre disponível ou livre de erros, e você não deve depender dele como único registro de compromissos importantes. Nada nestes termos afasta direitos que a lei assegura a você, incluindo os do Código de Defesa do Consumidor, quando aplicável." }
+        ]
+      },
+      {
+        "titulo": "12. Suspensão e encerramento",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Você pode excluir sua conta a qualquer momento em Configurações. Contas que violem estes termos podem ser suspensas ou excluídas, com aviso por e-mail sempre que possível." }
+        ]
+      },
+      {
+        "titulo": "13. Alterações",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Se estes termos mudarem de forma relevante, publicaremos a nova versão e pediremos a sua confirmação no próximo acesso. Se não concordar, você pode excluir a conta." }
+        ]
+      },
+      {
+        "titulo": "14. Lei aplicável e foro",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "Estes termos seguem as leis brasileiras. Eventuais conflitos podem ser levados ao foro do seu domicílio." }
+        ]
+      },
+      {
+        "titulo": "15. Contato",
+        "blocos": [
+          { "tipo": "paragrafo", "texto": "{contato}" }
+        ]
+      }
+    ]
+  }
+}
