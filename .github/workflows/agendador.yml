@@ -1,0 +1,39 @@
+# dispara as tarefas periodicas da api (lembretes push, resumo semanal, limpeza lgpd)
+# configure em Settings > Secrets and variables > Actions:
+#   API_URL     ex.: https://studyxp-api.onrender.com
+#   CRON_TOKEN  o mesmo valor da variavel CRON_TOKEN da api
+name: Agendador
+
+on:
+  schedule:
+    # de hora em hora (o github pode atrasar alguns minutos)
+    - cron: "5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  jobs-da-api:
+    runs-on: ubuntu-latest
+    if: ${{ vars.AGENDADOR_ATIVO == 'true' }}
+    steps:
+      - name: Acordar a api (plano gratuito dorme sem uso)
+        run: curl -fsS --retry 5 --retry-delay 15 --max-time 60 "$API_URL/api/v1/health"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+
+      - name: Lembretes de prazo
+        run: curl -fsS -X POST -H "X-Cron-Token: $CRON_TOKEN" "$API_URL/api/v1/interno/jobs/lembretes"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          CRON_TOKEN: ${{ secrets.CRON_TOKEN }}
+
+      - name: Resumo semanal
+        run: curl -fsS -X POST -H "X-Cron-Token: $CRON_TOKEN" "$API_URL/api/v1/interno/jobs/resumo-semanal"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          CRON_TOKEN: ${{ secrets.CRON_TOKEN }}
+
+      - name: Limpeza (retencao lgpd)
+        run: curl -fsS -X POST -H "X-Cron-Token: $CRON_TOKEN" "$API_URL/api/v1/interno/jobs/limpeza"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          CRON_TOKEN: ${{ secrets.CRON_TOKEN }}

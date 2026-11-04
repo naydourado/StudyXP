@@ -1,0 +1,24 @@
+# scan de seguranca OWASP ZAP (baseline, passivo) contra a api e o site publicados
+# rodar manualmente em Actions > Seguranca > Run workflow (antes da homologacao)
+name: Seguranca
+
+on:
+  workflow_dispatch:
+    inputs:
+      alvo:
+        description: "URL a analisar (ex.: https://studyxp.vercel.app ou https://studyxp-api.onrender.com/api/v1/health)"
+        required: true
+
+jobs:
+  zap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: OWASP ZAP baseline
+        run: |
+          docker run --rm -v "$PWD:/zap/wrk" -t ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t "${{ inputs.alvo }}" -r relatorio-zap.html -I
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: relatorio-zap
+          path: relatorio-zap.html

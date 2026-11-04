@@ -1,0 +1,36 @@
+# backup semanal do banco mysql (alem do backup automatico do provedor)
+# o arquivo fica como artefato privado do workflow por 30 dias, criptografado com BACKUP_SENHA
+# secrets necessarios:
+#   DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME  (dados do mysql de producao)
+#   BACKUP_SENHA                                    (senha para criptografar o arquivo)
+# para restaurar: gpg -d backup.sql.gz.gpg | gunzip | mysql -h ... -u ... -p studyxp
+name: Backup do banco
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # segunda-feira 03h em Brasilia
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    if: ${{ vars.BACKUP_ATIVO == 'true' }}
+    steps:
+      - name: Instalar cliente mysql
+        run: sudo apt-get update -q && sudo apt-get install -y -q mysql-client
+
+      - name: Gerar dump criptografado
+        env:
+          MYSQL_PWD: ${{ secrets.DB_PASSWORD }}
+          BACKUP_SENHA: ${{ secrets.BACKUP_SENHA }}
+        run: |
+          mysqldump --ssl-mode=REQUIRED --single-transaction --no-tablespaces \
+            -h "${{ secrets.DB_HOST }}" -P "${{ secrets.DB_PORT }}" -u "${{ secrets.DB_USER }}" "${{ secrets.DB_NAME }}" \
+            | gzip | gpg --batch --yes --pinentry-mode loopback --passphrase "$BACKUP_SENHA" -c -o backup.sql.gz.gpg
+          ls -lh backup.sql.gz.gpg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backup-studyxp-${{ github.run_id }}
+          path: backup.sql.gz.gpg
+          retention-days: 30
