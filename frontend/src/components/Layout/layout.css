@@ -129,3 +129,68 @@
 .app-layout.sidebar-closed .logout-btn svg {
   font-size: 21px;
 }
+/* celular: o menu vira uma barra fixa de icones no rodape (como no app) */
+@media (max-width: 768px) {
+  .app-layout,
+  .app-layout.sidebar-closed {
+    flex-direction: column;
+    padding: 0 0 84px;
+  }
+
+  .app-layout .sidebar,
+  .app-layout.sidebar-closed .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    height: 68px;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 6px;
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 -4px 18px rgba(45, 21, 157, 0.1);
+  }
+
+  .app-layout .sidebar > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .app-layout .logo-button {
+    display: none;
+  }
+
+  .app-layout .sidebar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 2px;
+    overflow: visible;
+  }
+
+  .app-layout .sidebar-nav a,
+  .app-layout .logout-btn,
+  .app-layout.sidebar-closed .sidebar-nav a,
+  .app-layout.sidebar-closed .logout-btn {
+    width: 42px;
+    min-width: 0;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    border-radius: 12px;
+  }
+
+  .app-layout .sidebar-nav a span,
+  .app-layout .logout-btn span {
+    display: none;
+  }
+
+  .app-layout .content {
+    padding: 16px;
+  }
+}

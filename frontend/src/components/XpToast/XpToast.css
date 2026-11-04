@@ -1,0 +1,51 @@
+.xp-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(45, 21, 157, 0.18);
+  animation: xp-toast-entrada 0.3s ease;
+}
+
+.xp-toast strong {
+  font-size: 22px;
+}
+
+.xp-toast .ganho {
+  color: #4526c9;
+}
+
+.xp-toast .perda {
+  color: #6b7280;
+}
+
+.xp-toast span {
+  font-size: 13px;
+  color: #333;
+}
+
+@keyframes xp-toast-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xp-toast {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .xp-toast {
+    right: 16px;
+    bottom: 92px;
+  }
+}

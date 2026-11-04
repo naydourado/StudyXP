@@ -14,7 +14,7 @@
 }
 
 .perfil-header p {
-  color: #5f6b7a;
+  color: #4b5263;
   font-size: 17px;
 }
 
@@ -81,7 +81,7 @@
 }
 
 .profile-summary-card p {
-  color: #687386;
+  color: #4b5263;
   margin-bottom: 26px;
 }
 
@@ -100,7 +100,7 @@
 }
 
 .xp-info span {
-  color: #4268ef;
+  color: #2f4fc4;
   font-weight: 800;
   letter-spacing: 2px;
   font-size: 13px;
@@ -125,7 +125,7 @@
 }
 
 .xp-box small {
-  color: #5f6b7a;
+  color: #4b5263;
   font-size: 13px;
 }
 
@@ -207,7 +207,7 @@
 }
 
 .profile-stats p {
-  color: #718096;
+  color: #5b6170;
   font-size: 14px;
 }
 
@@ -249,7 +249,7 @@
 
 .achievements-header span {
   background: #eef2ff;
-  color: #3d63ff;
+  color: #2f4fc4;
   padding: 8px 16px;
   border-radius: 999px;
   font-size: 14px;
@@ -291,7 +291,7 @@
 }
 
 .achievement-item p {
-  color: #718096;
+  color: #5b6170;
   font-size: 13px;
 }
 
@@ -316,7 +316,7 @@
 .achievement-item.locked {
   background: #f6f8fc;
   border: 2px dashed #cbd5e1;
-  color: #7c8797;
+  color: #5b6170;
 }
 
 .achievement-item.locked .achievement-icon {
@@ -339,4 +339,34 @@
   height: 100%;
   background: #aab4c5;
   border-radius: 999px;
+}
+.form-row {
+  margin-bottom: 20px;
+}
+
+.profile-info-card .bio-label {
+  margin-bottom: 24px;
+}
+
+.profile-info-card textarea {
+  min-height: 80px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  border-radius: 16px;
+  background: #edf2fb;
+  padding: 14px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  color: #222;
+}
+
+.profile-info-card button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.xp-info strong {
+  font-size: 32px;
 }

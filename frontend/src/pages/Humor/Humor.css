@@ -138,7 +138,7 @@
 }
 
 .historico-item span {
-  color: #777;
+  color: #5b6170;
   font-size: 13px;
 }
 
@@ -148,6 +148,117 @@
 }
 
 .empty-text {
-  color: #777;
+  color: #5b6170;
   font-size: 14px;
+}
+/* opcoes com nome embaixo do emoji, como no prototipo */
+.humor-options {
+  flex-wrap: wrap;
+}
+
+.humor-option {
+  width: 82px;
+  height: 82px;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 12px;
+}
+
+.humor-option span {
+  font-size: 30px;
+}
+
+.humor-option small {
+  font-size: 11px;
+  color: #333;
+}
+
+.humor-option.active small {
+  color: #ffffff;
+}
+
+.humor-card .save-humor-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.historico-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.historico-item > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.historico-emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.historico-excluir {
+  background: none;
+  color: #9aa3b5;
+  font-size: 16px;
+  padding: 4px;
+}
+
+.historico-excluir:hover,
+.historico-excluir:focus-visible {
+  color: #dc2626;
+}
+
+/* termo de consentimento */
+.consentimento-card {
+  max-width: 720px;
+}
+
+.consentimento-card p,
+.consentimento-card li {
+  color: #444;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.consentimento-card ul {
+  margin: 14px 0 14px 20px;
+}
+
+.consentimento-aviso {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f4f7ff;
+}
+
+.consentimento-acoes {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.consentimento-depois {
+  color: #555;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.consentimento-link {
+  margin-top: 14px;
+  font-size: 12px !important;
+}
+
+.consentimento-link a {
+  color: #4526c9;
+  font-weight: 600;
+}
+
+.consentimento-acoes .save-humor-btn {
+  margin-top: 0;
+  padding: 0 20px;
 }
