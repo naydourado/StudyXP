@@ -13,14 +13,14 @@ Web (React)      App Mobile (React Native / Expo)
         \          /
       API REST (FastAPI)
               ↓
-     Banco de Dados (MySQL)
+     Banco de Dados (PostgreSQL)
 ```
 
 O frontend é responsável pela interface e experiência do usuário.
 
 O backend concentra regras de negócio, autenticação, validações e comunicação com o banco de dados.
 
-O MySQL armazena os dados persistentes do sistema.
+O PostgreSQL armazena os dados persistentes do sistema.
 
 # Frontend
 
@@ -65,13 +65,13 @@ Tecnologias utilizadas:
 
 - FastAPI
 - SQLAlchemy
-- PyMySQL
+- psycopg
 - Passlib
 - JWT
 
 # Banco de Dados
 
-O StudyXP utiliza MySQL como sistema gerenciador de banco de dados.
+O StudyXP utiliza PostgreSQL como sistema gerenciador de banco de dados.
 
 O banco armazena informações relacionadas a:
 
@@ -102,7 +102,7 @@ FastAPI
 ↓
 SQLAlchemy
 ↓
-MySQL
+PostgreSQL
 ```
 
 Exemplo:

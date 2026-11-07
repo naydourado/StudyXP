@@ -12,16 +12,15 @@ jobs:
       run:
         working-directory: backend
     services:
-      mysql:
-        image: mysql:8.4
+      postgres:
+        image: postgres:18
         env:
-          MYSQL_DATABASE: studyxp
-          MYSQL_USER: studyxp
-          MYSQL_PASSWORD: studyxp
-          MYSQL_ROOT_PASSWORD: root
-        ports: ["3306:3306"]
+          POSTGRES_DB: studyxp
+          POSTGRES_USER: studyxp
+          POSTGRES_PASSWORD: studyxp
+        ports: ["5432:5432"]
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -ustudyxp -pstudyxp"
+          --health-cmd="pg_isready -U studyxp -d studyxp"
           --health-interval=5s --health-retries=20
     env:
       SECRET_KEY: chave-do-ci-com-mais-de-trinta-e-dois-caracteres
@@ -39,9 +38,9 @@ jobs:
         run: ruff check . && ruff format --check .
       - name: Testes
         run: pytest --cov=app --cov-report=term --cov-fail-under=80
-      - name: Migracoes no MySQL 8
+      - name: Migracoes no PostgreSQL 18
         env:
-          DATABASE_URL: mysql+pymysql://studyxp:studyxp@127.0.0.1:3306/studyxp
+          DATABASE_URL: postgresql+psycopg://studyxp:studyxp@127.0.0.1:5432/studyxp
         run: alembic upgrade head && alembic check && alembic downgrade base
       - name: Auditoria de dependencias
         run: pip-audit -r requirements.txt

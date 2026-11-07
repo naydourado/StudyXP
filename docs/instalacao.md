@@ -6,7 +6,7 @@ Passo a passo para rodar API, web e mobile em ambiente local.
 
 - Python 3.12 ou superior
 - Node.js 22 ou superior
-- MySQL 8 (XAMPP, MySQL Workbench ou Docker)
+- PostgreSQL 18 (instalador oficial, pgAdmin ou Docker)
 - Celular com o app **Expo Go** (ou emulador Android)
 
 # 1. Clonar
@@ -36,7 +36,7 @@ python scripts/gerar_chaves.py   # gera SECRET_KEY e HUMOR_ENC_KEY novas
 
 | Variável | Função |
 |---|---|
-| `DATABASE_URL` | Conexão MySQL: `mysql+pymysql://USUARIO:SENHA@localhost:3306/studyxp` |
+| `DATABASE_URL` | Conexão PostgreSQL: `postgresql+psycopg://USUARIO:SENHA@localhost:5432/studyxp` |
 | `SECRET_KEY` | Chave dos tokens JWT (mínimo 32 caracteres, nunca compartilhar) |
 | `HUMOR_ENC_KEY` | Chave de criptografia das notas de humor |
 | `CORS_ORIGINS` | Endereços do site autorizados, ex.: `["http://localhost:5173"]` |
@@ -56,7 +56,7 @@ CREATE DATABASE studyxp CHARACTER SET utf8mb4;
 alembic upgrade head
 ```
 
-> Quem tinha o banco da versão anterior: apague e recrie o banco `studyxp` antes do `alembic upgrade head` (as tabelas mudaram).
+> Quem vem da versão em MySQL: o banco antigo não serve mais. Apague o MySQL local, crie o banco `studyxp` no PostgreSQL e rode `alembic upgrade head` do zero.
 
 ## Executar
 
@@ -77,7 +77,7 @@ Com o Docker instalado, na raiz do projeto:
 docker compose up --build
 ```
 
-Sobe MySQL, API (com migrações) e Adminer (http://localhost:8080).
+Sobe PostgreSQL, API (com migrações) e Adminer (http://localhost:8080).
 
 # 3. Web (frontend)
 

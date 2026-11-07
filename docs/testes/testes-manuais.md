@@ -73,7 +73,7 @@ Instalar o APK gerado pelo EAS Build (o push só funciona no APK, não no Expo G
 | P5 | Agendador: Actions → Agendador → Run workflow | Os 3 passos ficam verdes | |
 | P6 | Resumo semanal num domingo após as 18h (com o resumo ligado) | E-mail chega uma vez | |
 | P7 | Backup: Actions → Backup do banco → Run workflow | Artefato criptografado gerado | |
-| P8 | Restaurar o backup num MySQL de teste | Dados voltam (ver comando no `backup.yml`) | |
+| P8 | Restaurar o backup num PostgreSQL de teste | Dados voltam (ver comando no `backup.yml`) | |
 | P9 | Scan de segurança: Actions → Seguranca → Run workflow | Relatório sem alertas altos | |
-| P10 | `docker compose up --build` numa máquina com Docker | MySQL, API e Adminer sobem; API responde | |
+| P10 | `docker compose up --build` numa máquina com Docker | PostgreSQL, API e Adminer sobem; API responde | |
 | P11 | Conexão com a Aiven usando `DATABASE_SSL_CA` | API conecta; sem o certificado, a conexão é recusada | |

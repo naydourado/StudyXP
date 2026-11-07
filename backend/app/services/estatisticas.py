@@ -10,7 +10,7 @@ from app.models import EventoXP, SessaoFoco, Tarefa, Usuario
 from app.models.enums import StatusTarefa, TipoSessao
 
 
-# agrupa por dia local do usuario (feito em python para funcionar igual em mysql e sqlite)
+# agrupa por dia local do usuario (feito em python para funcionar igual em postgres e sqlite)
 def serie_por_dia(db: Session, usuario: Usuario, inicio: date, fim: date) -> dict[date, dict]:
     fuso = usuario.fuso_horario
     inicio_utc, _ = tempo.limites_do_dia(inicio, fuso)

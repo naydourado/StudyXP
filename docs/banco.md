@@ -1,6 +1,6 @@
 # Banco de Dados
 
-O StudyXP usa MySQL 8. O acesso é feito pelo SQLAlchemy (ORM) e a estrutura é versionada com **Alembic** (`backend/alembic/versions/`).
+O StudyXP usa PostgreSQL 18. O acesso é feito pelo SQLAlchemy (ORM) e a estrutura é versionada com **Alembic** (`backend/alembic/versions/`).
 
 ```bash
 alembic upgrade head                              # cria/atualiza as tabelas

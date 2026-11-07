@@ -11,11 +11,11 @@ Disponível em versão **web** (React) e **mobile** (React Native / Expo), as du
 
 | Camada | Tecnologias |
 |---|---|
-| API (`backend/`) | Python, FastAPI, SQLAlchemy 2, Alembic, PyJWT, Argon2 (pwdlib), SlowAPI, MySQL 8 |
+| API (`backend/`) | Python, FastAPI, SQLAlchemy 2, Alembic, PyJWT, Argon2 (pwdlib), SlowAPI, PostgreSQL 18 |
 | Web (`frontend/`) | React 19, Vite, React Router, Axios, Recharts, React Icons |
 | Mobile (`mobile/`) | React Native, Expo SDK 58, Expo Router, Expo SecureStore |
 | Qualidade | pytest, Ruff, ESLint, TypeScript, GitHub Actions, Dependabot |
-| Infra | Docker, Render (API), Aiven (MySQL), Vercel (web), EAS Build (APK) |
+| Infra | Docker, Render (API), Aiven (PostgreSQL), Vercel (web), EAS Build (APK) |
 
 # Funcionalidades
 
@@ -46,7 +46,7 @@ StudyXP/
 ├── frontend/           site React (Vite)
 ├── mobile/             app React Native (Expo)
 ├── docs/               documentação
-├── docker-compose.yml  ambiente local completo (MySQL + API)
+├── docker-compose.yml  ambiente local completo (PostgreSQL + API)
 └── .github/            CI (testes, lint, build) e Dependabot
 ```
 

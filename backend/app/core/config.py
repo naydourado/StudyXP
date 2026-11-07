@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     # desenvolvimento | producao | teste
     ambiente: str = "desenvolvimento"
 
-    database_url: str = "mysql+pymysql://root:root@localhost:3306/studyxp"
-    # certificado (ca) do mysql na nuvem para conexao tls; vazio = sem tls (banco local)
+    database_url: str = "postgresql+psycopg://studyxp:studyxp@localhost:5432/studyxp"
+    # certificado (ca) do postgres na nuvem para conexao tls; vazio = sem tls (banco local)
     database_ssl_ca: str = ""
 
     # chave usada para assinar os tokens jwt (minimo 32 caracteres)

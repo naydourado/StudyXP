@@ -18,7 +18,7 @@ Escala: probabilidade (P) e impacto (I) de 1 (baixo) a 3 (alto). **Status:** ✅
 | L5 | **Encarregado/canal de contato não definido** (art. 41) | 3 | 2 | Agente de pequeno porte pode ser dispensado de indicar encarregado, mas precisa de canal de comunicação (Resolução CD/ANPD nº 2/2022 — conferir) | ❌ definir o e-mail |
 | L6 | Transferência internacional sem fundamento (art. 33) | 2 | 2 | Informada na Política com o fundamento do art. 33, IX (execução de contrato a pedido do titular). Para algo além do projeto acadêmico, avaliar cláusulas-padrão da ANPD (Resolução CD/ANPD nº 19/2024 — conferir) | ⚠️ |
 | L7 | Incidente de segurança sem resposta adequada | 1 | 3 | Plano de resposta com prazos e modelo de registro (Resolução CD/ANPD nº 15/2024 — conferir o prazo vigente) | ✅ |
-| L8 | Segredos já expostos no histórico do Git (`.env` antigo) | 3 | 3 | `.env` removido do repositório e `SECRET_KEY` trocada localmente | ❌ trocar a senha do MySQL; avaliar limpar o histórico |
+| L8 | Segredos já expostos no histórico do Git (`.env` antigo) | 3 | 3 | `.env` removido do repositório e `SECRET_KEY` trocada localmente | ❌ trocar a senha do PostgreSQL; avaliar limpar o histórico |
 | L9 | Reter dados por tempo excessivo | 1 | 2 | Logs de acesso apagados após 6 meses; tokens vencidos apagados; backups por 30 dias | ⚠️ não há regra para contas inativas — decidir (ex.: aviso e exclusão após 24 meses sem acesso) |
 | L10 | Mudar os termos sem novo aceite | 1 | 2 | Versão dos textos amarrada à `TERMOS_VERSAO` da API; com versão nova, o usuário precisa aceitar de novo antes de usar | ✅ |
 | L11 | Envio de e-mail sem consentimento | 1 | 1 | Resumo semanal é opt-in e todo e-mail tem link para a Política e para desligar | ✅ |
@@ -81,7 +81,7 @@ Escala: probabilidade (P) e impacto (I) de 1 (baixo) a 3 (alto). **Status:** ✅
 
 ## 10. Prioridades antes da entrega
 
-1. **L8:** trocar a senha do MySQL.
+1. **L8:** trocar a senha do PostgreSQL.
 2. **L5:** definir o e-mail do canal de privacidade e rodar `node scripts/sincronizar-legal.mjs`.
 3. **P1:** conferir o regulamento de propriedade intelectual da UNASP e decidir a licença do código.
 4. **U2:** confirmar com o orientador o enquadramento do teste com usuários.

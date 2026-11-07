@@ -35,7 +35,7 @@ def criar_engine(url: str):
     return create_engine(url, pool_pre_ping=True, pool_recycle=280, connect_args=_args_tls())
 
 
-# conexao criptografada (tls) com o mysql na nuvem: DATABASE_SSL_CA recebe o certificado
+# conexao criptografada (tls) com o postgres na nuvem: DATABASE_SSL_CA recebe o certificado
 # do provedor (o conteudo "-----BEGIN CERTIFICATE-----..." ou o caminho do arquivo)
 def _args_tls() -> dict:
     ca = get_settings().database_ssl_ca.strip()
@@ -47,7 +47,7 @@ def _args_tls() -> dict:
         arquivo.write(ca.replace("\\n", "\n"))
         arquivo.close()
         ca = arquivo.name
-    return {"ssl": {"ca": ca}}
+    return {"sslmode": "verify-full", "sslrootcert": ca}
 
 
 engine = criar_engine(get_settings().database_url)

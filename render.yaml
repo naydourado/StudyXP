@@ -14,7 +14,7 @@ services:
       - key: COOKIE_SECURE
         value: "true"
       - key: DATABASE_URL
-        sync: false # mysql+pymysql://USUARIO:SENHA@HOST:PORTA/defaultdb (dados da aiven)
+        sync: false # postgresql+psycopg://USUARIO:SENHA@HOST:PORTA/defaultdb (dados da aiven)
       - key: DATABASE_SSL_CA
         sync: false # conteudo do "CA certificate" da aiven (conexao tls)
       - key: SECRET_KEY

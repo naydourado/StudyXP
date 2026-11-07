@@ -11,7 +11,7 @@ O backend é uma API REST em FastAPI que atende o site (React) e o app (React Na
 | FastAPI + Uvicorn | API REST e servidor ASGI |
 | SQLAlchemy 2 | ORM (mapeamento das tabelas) |
 | Alembic | Migrações versionadas do banco |
-| PyMySQL | Driver do MySQL |
+| psycopg | Driver do PostgreSQL |
 | Pydantic + pydantic-settings | Validação de dados e das variáveis de ambiente |
 | PyJWT | Tokens de acesso (JWT) |
 | pwdlib (Argon2) | Hash de senhas |
@@ -108,4 +108,4 @@ E-mail (Resend) e push (Expo) têm o modo `console`, que só escreve no log — 
 pytest
 ```
 
-Os testes usam SQLite em memória e um relógio simulado (`tempo.agora`) para testar virada de dia, ofensiva e limites diários. No CI as migrações também são aplicadas num MySQL 8 real.
+Os testes usam SQLite em memória e um relógio simulado (`tempo.agora`) para testar virada de dia, ofensiva e limites diários. No CI as migrações também são aplicadas num PostgreSQL 18 real.

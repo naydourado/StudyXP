@@ -1,21 +1,21 @@
 # ambiente local completo: docker compose up --build
 #   api:     http://localhost:8000/docs
-#   adminer: http://localhost:8080 (servidor: mysql, usuario: studyxp, senha: studyxp)
+#   adminer: http://localhost:8080 (sistema: PostgreSQL, servidor: postgres,
+#            usuario: studyxp, senha: studyxp, base: studyxp)
 # as chaves SECRET_KEY e HUMOR_ENC_KEY vem do backend/.env
 services:
-  mysql:
-    image: mysql:8.4
+  postgres:
+    image: postgres:18
     environment:
-      MYSQL_DATABASE: studyxp
-      MYSQL_USER: studyxp
-      MYSQL_PASSWORD: studyxp
-      MYSQL_ROOT_PASSWORD: studyxp-root
+      POSTGRES_DB: studyxp
+      POSTGRES_USER: studyxp
+      POSTGRES_PASSWORD: studyxp
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_dados:/var/lib/mysql
+      - postgres_dados:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ustudyxp", "-pstudyxp"]
+      test: ["CMD-SHELL", "pg_isready -U studyxp -d studyxp"]
       interval: 5s
       retries: 20
 
@@ -24,11 +24,11 @@ services:
     restart: unless-stopped
     env_file: ./backend/.env
     environment:
-      DATABASE_URL: mysql+pymysql://studyxp:studyxp@mysql:3306/studyxp
+      DATABASE_URL: postgresql+psycopg://studyxp:studyxp@postgres:5432/studyxp
     ports:
       - "8000:8000"
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
 
   adminer:
@@ -37,4 +37,4 @@ services:
       - "8080:8080"
 
 volumes:
-  mysql_dados:
+  postgres_dados:

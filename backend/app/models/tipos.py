@@ -7,7 +7,7 @@ from sqlalchemy.orm import mapped_column
 from app.core import tempo
 
 
-# enum salvo como texto (varchar + check), funciona igual no mysql e no sqlite
+# enum salvo como texto (varchar + check), funciona igual no postgres e no sqlite
 def coluna_enum(enum_cls: type[StrEnum], **kwargs):
     return mapped_column(
         Enum(
