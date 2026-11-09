@@ -1,0 +1,43 @@
+# backup semanal do banco postgres (alem do backup automatico do provedor)
+# o arquivo fica como artefato privado do workflow por 30 dias, criptografado com BACKUP_SENHA
+# secrets necessarios:
+#   DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME  (dados do postgres de producao)
+#   BACKUP_SENHA                                    (senha para criptografar o arquivo)
+# para restaurar: gpg -d backup.sql.gz.gpg | gunzip | psql -h ... -U ... -d defaultdb
+name: Backup do banco
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # segunda-feira 03h em Brasilia
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    if: ${{ vars.BACKUP_ATIVO == 'true' }}
+    steps:
+      - name: Instalar cliente postgres 18
+        # o ubuntu do runner traz um pg_dump antigo demais para o servidor da aiven
+        run: |
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+            | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/pgdg.gpg
+          echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -q && sudo apt-get install -y -q postgresql-client-18
+
+      - name: Gerar dump criptografado
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+          PGSSLMODE: require
+          BACKUP_SENHA: ${{ secrets.BACKUP_SENHA }}
+        run: |
+          pg_dump --no-owner --no-privileges \
+            -h "${{ secrets.DB_HOST }}" -p "${{ secrets.DB_PORT }}" -U "${{ secrets.DB_USER }}" -d "${{ secrets.DB_NAME }}" \
+            | gzip | gpg --batch --yes --pinentry-mode loopback --passphrase "$BACKUP_SENHA" -c -o backup.sql.gz.gpg
+          ls -lh backup.sql.gz.gpg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backup-studyxp-${{ github.run_id }}
+          path: backup.sql.gz.gpg
+          retention-days: 30

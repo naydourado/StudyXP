@@ -1,4 +1,27 @@
 .vscode/*
 !.vscode/extensions.json
+
+# segredos - nunca versionar (use os arquivos .env.example)
+.env
+.env.*
+!.env.example
+
+# python
 env
+.venv
+venv
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.db
+
+# node / expo
 node_modules
+dist
+.expo/
+web-build/
+*.apk
+*.aab

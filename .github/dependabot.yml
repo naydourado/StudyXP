@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /backend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: npm
+    directory: /mobile
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # versoes do expo devem ser atualizadas com "npx expo install --fix"
+    ignore:
+      - dependency-name: "expo*"
+      - dependency-name: "react-native*"
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

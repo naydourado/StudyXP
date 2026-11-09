@@ -1,207 +1,106 @@
 # Banco de Dados
 
-O StudyXP utiliza MySQL como sistema gerenciador de banco de dados.
+O StudyXP usa PostgreSQL 18. O acesso é feito pelo SQLAlchemy (ORM) e a estrutura é versionada com **Alembic** (`backend/alembic/versions/`).
 
-O acesso é realizado através do SQLAlchemy ORM, permitindo manipulação dos dados por objetos Python e reduzindo a necessidade de comandos SQL diretos.
-
-# Visão Geral
-
-O banco foi estruturado para armazenar informações relacionadas à conta do usuário e suas atividades dentro da plataforma.
-
-Principais entidades:
-
-- Usuarios
-- Tarefas
-- Registro de Humor
-- Sessao de Foco
-- Historico de Acessos
-
-# Modelo Conceitual
-
-Relacionamentos principais:
-
-```txt
-Usuario
-│
-├── Tarefas
-├── Registros de Humor
-├── Sessões de Foco
-└── Histórico de Acessos
+```bash
+alembic upgrade head                              # cria/atualiza as tabelas
+alembic revision --autogenerate -m "descricao"    # nova migração após mudar um model
 ```
 
-Cada usuário possui seus próprios dados e registros.
+# Modelo
 
-# Tabela: usuarios
+Todas as tabelas de dados pertencem a um usuário (`usuario_id`) com `ON DELETE CASCADE`: excluir a conta apaga tudo (LGPD). Datas são guardadas em UTC.
 
-Armazena informações básicas da conta e progresso do estudante.
+```txt
+usuarios
+├── tarefas
+├── sessoes_foco
+├── registros_humor
+├── eventos_xp
+├── usuario_conquistas
+├── preferencias (1:1)
+├── refresh_tokens
+├── consentimentos
+└── historico_acessos
+```
 
-Campos:
+## usuarios
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| id | Integer | Identificador |
-| nome | String | Nome do usuário |
-| email | String | Email único |
-| senha | String | Senha criptografada |
-| xp | Integer | XP acumulado |
-| nivel | Integer | Nível atual |
-| ultimo_acesso | DateTime | Último login |
-| sequencia_dias | Integer | Dias consecutivos |
-| data_criacao | DateTime | Data de cadastro |
+| id | int | Identificador |
+| nome | varchar(100) | Nome |
+| email | varchar(120) | Único |
+| senha_hash | varchar(255) | Hash Argon2 |
+| bio | varchar(280) | Opcional |
+| fuso_horario | varchar(50) | Padrão America/Sao_Paulo |
+| xp | int | XP total (o nível é calculado a partir dele) |
+| ofensiva_atual / ofensiva_recorde | int | Dias seguidos |
+| ultimo_dia_ativo | date | Último dia que contou para a ofensiva |
+| termos_versao / termos_aceitos_em | varchar / datetime | Aceite dos termos |
+| criado_em / atualizado_em | datetime | |
 
-Exemplo:
-
-```txt
-1 | Nayra | nayra@email.com | XP 50 | Nivel 1
-```
-
-# Tabela: tarefas
-
-Responsável pelo gerenciamento das tarefas do usuário.
-
-Relacionamento:
-
-```txt
-Muitos para Um
-tarefas → usuarios
-```
-
-Campos:
+## tarefas
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| id | Integer | Identificador |
-| titulo | String | Nome da tarefa |
-| descricao | String | Descrição |
-| prioridade | String | Baixa, média ou alta |
-| status | String | Pendente ou concluída |
-| xp_recompensa | Integer | XP gerado |
-| usuario_id | Integer | FK usuário |
+| titulo | varchar(150) | |
+| descricao | varchar(1000) | Opcional |
+| prioridade | baixa · media · alta | |
+| status | pendente · concluida | |
+| data_prazo | date | Opcional |
+| xp_recompensa | int | Quanto vale (pela prioridade) |
+| xp_concedido | int | Quanto foi dado na conclusão |
+| data_conclusao | datetime | |
+| lembrete_vespera_em / lembrete_dia_em | datetime | Quando o lembrete push foi enviado (zera se o prazo mudar) |
 
-Exemplo:
-
-```txt
-Estudar Redes | Alta | Pendente | 30 XP
-```
-
-# Tabela: registro_humor
-
-Armazena emoções e observações relacionadas ao estudo.
-
-Relacionamento:
-
-```txt
-Muitos para Um
-registro_humor → usuarios
-```
-
-Campos:
+## sessoes_foco
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| id | Integer | Identificador |
-| humor | String | Emoção |
-| observacao | Text | Comentário |
-| data_registro | DateTime | Data |
-| usuario_id | Integer | FK usuário |
+| tipo | foco · pausa_curta · pausa_longa | |
+| duracao_planejada | int | Minutos |
+| status | em_andamento · concluida · interrompida · cancelada | |
+| iniciada_em / finalizada_em | datetime | Marcados pelo servidor |
+| minutos_validos | int | Minutos que contaram |
+| xp_concedido | int | |
 
-Exemplo:
-
-```txt
-feliz | "Dia produtivo"
-```
-
-# Tabela: sessao_foco
-
-Responsável pelo histórico Pomodoro.
-
-Relacionamento:
-
-```txt
-Muitos para Um
-sessao_foco → usuarios
-```
-
-Campos:
+## registros_humor
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| id | Integer | Identificador |
-| tempo_minutos | Integer | Tempo estudado |
-| data_registro | DateTime | Registro |
-| usuario_id | Integer | FK usuário |
+| humor | otimo · bom · neutro · ansioso · cansado | |
+| observacao_cifrada | text | Nota criptografada (Fernet) |
+| criado_em | datetime | |
 
-Exemplo:
+## eventos_xp
 
-```txt
-25 minutos
-```
+Extrato de XP: `origem` (tarefa · foco · humor), `origem_id`, `xp` (negativo = estorno), `criado_em`. Alimenta o gráfico "XP da semana".
 
-# Tabela: historico_acessos
+## usuario_conquistas
 
-Controla acessos e sequência de estudos.
+`codigo` da conquista e `desbloqueada_em`. O catálogo (nomes e critérios) fica no código em `services/conquistas.py`.
 
-Relacionamento:
+## preferencias
 
-```txt
-Muitos para Um
-historico_acessos → usuarios
-```
+`lembrete_tarefas`, `som_pomodoro`, `resumo_semanal` (os três interruptores de Configurações) e `resumo_enviado_em` (evita repetir o e-mail na mesma semana).
 
-Campos:
+## refresh_tokens
 
-| Campo | Tipo | Descrição |
-|---|---|---|
-| id | Integer | Identificador |
-| data_acesso | DateTime | Momento do acesso |
-| usuario_id | Integer | FK usuário |
+`token_hash` (SHA-256 — o token em si nunca é salvo), `familia` (sessão de login), `expira_em`, `revogado_em`, `dispositivo`.
 
-Essa tabela é utilizada para cálculo da sequência diária.
+## consentimentos
 
-# Integridade e Relacionamentos
+Histórico de aceites e revogações: `tipo` (termos · humor), `versao`, `concedido`, `criado_em`. Vale o último registro de cada tipo.
 
-O banco utiliza chaves estrangeiras para garantir integridade referencial.
+## tokens_redefinicao_senha
 
-Exemplo:
+Pedidos de "esqueci minha senha": `token_hash` (SHA-256), `expira_em` (30 minutos), `usado_em`. Um pedido novo invalida os anteriores.
 
-Uma tarefa não pode existir sem estar vinculada a um usuário.
+## dispositivos_push
 
-Relacionamentos:
+Celulares que recebem lembretes: `token` do Expo Push (único) e `plataforma`. Tokens de apps desinstalados são removidos automaticamente.
 
-```txt
-usuarios 1:N tarefas
-usuarios 1:N registro_humor
-usuarios 1:N sessao_foco
-usuarios 1:N historico_acessos
-```
+## historico_acessos
 
-# SQLAlchemy ORM
-
-O projeto utiliza ORM para:
-
-- Criar entidades
-- Relacionar tabelas
-- Executar consultas
-- Inserir registros
-- Atualizar dados
-- Remover informações
-
-Exemplo:
-
-```python
-usuario.tarefas
-```
-
-Esse mecanismo melhora organização e manutenção do código.
-
-# Considerações
-
-A estrutura do banco foi planejada para:
-
-- Separação clara dos dados
-- Escalabilidade
-- Facilidade de manutenção
-- Segurança
-- Integração com FastAPI e SQLAlchemy
-
-O modelo permite expansão futura com novas funcionalidades e módulos.
+`ip` e data de cada login, para segurança. Retenção de 6 meses.

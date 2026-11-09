@@ -1,430 +1,106 @@
-# API do StudyXP
+# API do StudyXP (v1)
 
-A API do StudyXP foi desenvolvida utilizando FastAPI e segue o padrão REST.
+API REST em FastAPI usada pelo web e pelo app mobile. Todas as rotas usam JSON e ficam sob o prefixo `/api/v1`.
 
-As rotas utilizam JSON para envio e retorno de dados.
-
-Grande parte dos endpoints exige autenticação JWT.
-
-Base URL local:
-
-```txt
-http://127.0.0.1:8000
-```
-
-# Autenticação
-
-As rotas privadas exigem envio do token JWT.
-
-Formato:
-
-```txt
-Authorization: Bearer TOKEN
-```
-
-O token é obtido durante o login.
-
-# Usuários
-
-## Cadastro
-
-### POST /usuarios
-
-Cria um novo usuário.
-
-Body:
-
-```json
-{
-  "nome": "Nayra",
-  "email": "nayra@email.com",
-  "senha": "123456"
-}
-```
-
-Retorno:
-
-```json
-{
-  "id": 1,
-  "nome": "Nayra",
-  "email": "nayra@email.com"
-}
-```
-
----
-
-## Login
-
-### POST /login
-
-Autentica o usuário e gera token JWT.
-
-Body:
-
-```json
-{
-  "email": "nayra@email.com",
-  "senha": "123456"
-}
-```
-
-Retorno:
-
-```json
-{
-  "access_token": "TOKEN",
-  "token_type": "bearer"
-}
-```
-
----
-
-## Usuário Logado
-
-### GET /me
-
-Retorna informações do usuário autenticado.
-
-Autenticação:
-
-Sim.
-
-Retorno:
-
-```json
-{
-  "id": 1,
-  "nome": "Nayra",
-  "email": "nayra@email.com"
-}
-```
-
----
-
-## Editar Perfil
-
-### PUT /perfil
-
-Atualiza informações do usuário.
-
-Autenticação:
-
-Sim.
-
-Body:
-
-```json
-{
-  "nome": "Novo Nome",
-  "email": "novo@email.com"
-}
-```
-
-Retorno:
-
-```json
-{
-  "mensagem": "Perfil atualizado"
-}
-```
-
----
-
-## Alterar Senha
-
-### PUT /alterar-senha
-
-Permite alterar a senha da conta.
-
-Autenticação:
-
-Sim.
-
-Body:
-
-```json
-{
-  "senha_atual": "123456",
-  "nova_senha": "654321"
-}
-```
-
-Retorno:
-
-```json
-{
-  "mensagem": "Senha alterada com sucesso"
-}
-```
-
----
-
-## Excluir Conta
-
-### DELETE /perfil
-
-Remove o usuário e seus dados associados.
-
-Autenticação:
-
-Sim.
-
-Retorno:
-
-```json
-{
-  "mensagem": "Conta excluida com sucesso"
-}
-```
-
-# Dashboard
-
-## Dados Gerais
-
-### GET /dashboard
-
-Retorna informações gerais do usuário.
-
-Autenticação:
-
-Sim.
-
-Retorno:
-
-```json
-{
-  "xp": 50,
-  "nivel": 1,
-  "sequencia_dias": 2,
-  "tarefas_concluidas": 4,
-  "tempo_total_foco": 25
-}
-```
-
-# Tarefas
-
-## Listar Tarefas
-
-### GET /tarefas
-
-Lista tarefas do usuário.
-
-Autenticação:
-
-Sim.
-
-Retorno:
-
-```json
-[
-  {
-    "id": 1,
-    "titulo": "Estudar Redes",
-    "prioridade": "alta",
-    "status": "pendente"
-  }
-]
-```
-
----
-
-## Criar Tarefa
-
-### POST /tarefas
-
-Cria uma tarefa.
-
-Autenticação:
-
-Sim.
-
-Body:
-
-```json
-{
-  "titulo": "Estudar",
-  "descricao": "Capítulo 3",
-  "prioridade": "alta"
-}
-```
-
-Retorno:
-
-```json
-{
-  "mensagem": "Tarefa criada"
-}
-```
-
----
-
-## Editar Tarefa
-
-### PUT /tarefas/{id}
-
-Atualiza dados da tarefa.
-
-Autenticação:
-
-Sim.
-
-Body:
-
-```json
-{
-  "titulo": "Novo título",
-  "status": "concluida"
-}
-```
-
-Retorno:
-
-```json
-{
-  "mensagem": "Tarefa atualizada"
-}
-```
-
----
-
-## Excluir Tarefa
-
-### DELETE /tarefas/{id}
-
-Remove uma tarefa.
-
-Autenticação:
-
-Sim.
-
-Retorno:
-
-```json
-{
-  "mensagem": "Tarefa excluida"
-}
-```
-
-# Registro de Humor
-
-## Listar Humor
-
-### GET /humor
-
-Retorna histórico de humor.
-
-Autenticação:
-
-Sim.
-
-Retorno:
-
-```json
-[
-  {
-    "humor": "feliz",
-    "observacao": "Dia produtivo"
-  }
-]
-```
-
----
-
-## Registrar Humor
-
-### POST /humor
-
-Cria novo registro.
-
-Autenticação:
-
-Sim.
-
-Body:
-
-```json
-{
-  "humor": "feliz",
-  "observacao": "Dia produtivo"
-}
-```
-
-Retorno:
-
-```json
-{
-  "mensagem": "Humor registrado"
-}
-```
-
-# Sessões de Foco
-
-## Listar Sessões
-
-### GET /foco
-
-Retorna sessões registradas.
-
-Autenticação:
-
-Sim.
-
-Retorno:
-
-```json
-[
-  {
-    "tempo_minutos": 25
-  }
-]
-```
-
----
-
-## Registrar Sessão
-
-### POST /foco
-
-Salva uma sessão Pomodoro.
-
-Autenticação:
-
-Sim.
-
-Body:
-
-```json
-{
-  "tempo_minutos": 25
-}
-```
-
-Retorno:
-
-```json
-{
-  "mensagem": "Sessao registrada"
-}
-```
-
-# Respostas HTTP
-
-Principais códigos utilizados:
-
-| Código | Significado |
-|---|---|
-| 200 | Sucesso |
-| 201 | Criado |
-| 400 | Dados inválidos |
-| 401 | Não autenticado |
-| 404 | Não encontrado |
-| 500 | Erro interno |
-
-# Swagger
-
-A documentação automática pode ser acessada em:
+A documentação interativa completa (com todos os campos) é gerada automaticamente:
 
 ```txt
 http://127.0.0.1:8000/docs
 ```
+
+# Autenticação
+
+- `POST /auth/login` devolve um **access token** (15 minutos) e um **refresh token** (30 dias).
+- Rotas privadas exigem o header `Authorization: Bearer ACCESS_TOKEN`.
+- Quando o access token vence (401), o cliente chama `POST /auth/refresh` e recebe um novo par. O refresh token antigo deixa de valer (rotação); reutilizá-lo derruba a sessão inteira.
+- **Web:** o refresh token vai num cookie `HttpOnly` (o JavaScript não consegue ler).
+- **Mobile:** enviar o header `X-Cliente: mobile`; o refresh token vem no corpo e o app guarda no SecureStore.
+
+# Erros
+
+Formato padrão:
+
+```json
+{ "detail": "Mensagem para o usuário.", "code": "codigo_do_erro" }
+```
+
+Erros de validação (422) trazem também a lista de campos:
+
+```json
+{ "detail": "Dados inválidos.", "code": "validacao", "erros": [{ "campo": "email", "mensagem": "..." }] }
+```
+
+| Código HTTP | Quando |
+|---|---|
+| 200 / 201 / 204 | Sucesso |
+| 400 | Regra de negócio (ex.: senha atual incorreta) |
+| 401 | Sem login ou sessão expirada |
+| 403 | Sem permissão (ex.: humor sem consentimento) |
+| 404 | Não encontrado (inclui recurso de outro usuário) |
+| 409 | Conflito (ex.: e-mail já cadastrado, tarefa já concluída) |
+| 422 | Dados inválidos |
+| 429 | Muitas tentativas (limite de requisições) |
+
+# Rotas
+
+(A) = exige login.
+
+| Módulo | Método e rota | Função |
+|---|---|---|
+| Auth | `POST /auth/cadastro` | Cria conta (`aceite_termos` e `maior_de_idade` obrigatórios) e já faz login |
+| Auth | `POST /auth/login` | Login |
+| Auth | `POST /auth/refresh` | Renova a sessão |
+| Auth | `POST /auth/logout` | Encerra a sessão do dispositivo |
+| Auth | `POST /auth/esqueci-senha` | Envia link de redefinição por e-mail (resposta igual exista ou não a conta) |
+| Auth | `POST /auth/redefinir-senha` | Troca a senha com o token do link (30 min, uso único) |
+| Conta | `GET /me` (A) | Dados do usuário |
+| Conta | `PATCH /me` (A) | Edita nome, e-mail, bio, fuso horário |
+| Conta | `PUT /me/senha` (A) | Troca a senha (desconecta outros dispositivos) |
+| Conta | `DELETE /me` (A) | Exclui a conta e todos os dados (corpo: `{"senha": "..."}`) |
+| Conta | `GET /me/exportar` (A) | Todos os dados do usuário em JSON (LGPD) |
+| Conta | `GET` / `PUT /me/preferencias` (A) | Lembretes, som do pomodoro, resumo semanal |
+| Conta | `GET` / `PUT /me/consentimentos` (A) | Autorização do registro de humor (revogar apaga os registros) |
+| Conta | `POST` / `DELETE /me/dispositivos` (A) | Registra ou remove o token de push do celular |
+| Tarefas | `GET /tarefas?status=&prazo=hoje\|atrasadas\|semana&page=&size=` (A) | Lista |
+| Tarefas | `POST /tarefas` (A) | Cria (`titulo`, `descricao`, `prioridade`, `data_prazo`) |
+| Tarefas | `GET` / `PATCH` / `DELETE /tarefas/{id}` (A) | Detalha, edita, exclui |
+| Tarefas | `POST /tarefas/{id}/concluir` (A) | Conclui e concede XP |
+| Tarefas | `POST /tarefas/{id}/reabrir` (A) | Reabre e estorna o XP |
+| Foco | `POST /foco/sessoes` (A) | Inicia sessão (`tipo`, `duracao_planejada`) |
+| Foco | `POST /foco/sessoes/{id}/finalizar` (A) | Encerra e concede XP pelos minutos reais |
+| Foco | `POST /foco/sessoes/{id}/cancelar` (A) | Cancela |
+| Foco | `GET /foco/sessoes`, `GET /foco/resumo-hoje` (A) | Histórico e minutos de hoje |
+| Humor | `GET` / `POST /humor` (A) | Histórico e registro (`humor`, `observacao`) |
+| Humor | `DELETE /humor/{id}`, `DELETE /humor` (A) | Apaga um ou todos |
+| Painel | `GET /dashboard` (A) | Dados da tela inicial |
+| Painel | `GET /progresso?periodo=semana\|mes` (A) | Totais e série por dia para os gráficos |
+| Painel | `GET /gamificacao/status` (A) | XP, nível, faixa do nível, ofensiva |
+| Painel | `GET /conquistas` (A) | Catálogo com bloqueadas e desbloqueadas |
+| Sistema | `GET /health` | Verificação de funcionamento |
+| Interno | `POST /interno/jobs/{lembretes\|resumo-semanal\|limpeza}` | Tarefas periódicas; exige o header `X-Cron-Token` (chamadas pelo agendador do GitHub) |
+
+# Respostas que dão XP
+
+Concluir tarefa, finalizar foco e registrar humor devolvem:
+
+```json
+{
+  "xp_ganho": 80,
+  "gamificacao": {
+    "xp_total": 320, "nivel": 3, "xp_no_nivel": 20, "xp_para_proximo": 300,
+    "percentual": 6.7, "ofensiva_atual": 4, "ofensiva_recorde": 7
+  },
+  "novas_conquistas": [{ "codigo": "tarefas_10", "nome": "10 tarefas", "...": "..." }],
+  "tarefa": { "...": "..." }
+}
+```
+
+# Limites
+
+| Rota | Limite por IP |
+|---|---|
+| `POST /auth/login` | 5 por minuto |
+| `POST /auth/cadastro` | 5 por hora |
+| `POST /auth/refresh` | 30 por minuto |
+| `POST /auth/esqueci-senha` | 3 por hora |
+| `POST /auth/redefinir-senha` | 10 por hora |

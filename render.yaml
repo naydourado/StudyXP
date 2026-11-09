@@ -1,0 +1,37 @@
+# blueprint do render (render.com > New > Blueprint > escolher este repositorio)
+# cria a api a partir do Dockerfile; os segredos sao preenchidos no painel do render
+services:
+  - type: web
+    name: studyxp-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: AMBIENTE
+        value: producao
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: DATABASE_URL
+        sync: false # postgresql+psycopg://USUARIO:SENHA@HOST:PORTA/defaultdb (dados da aiven)
+      - key: DATABASE_SSL_CA
+        sync: false # conteudo do "CA certificate" da aiven (conexao tls)
+      - key: SECRET_KEY
+        generateValue: true
+      - key: HUMOR_ENC_KEY
+        sync: false # gerar com: python scripts/gerar_chaves.py (NUNCA trocar depois: as notas ficariam ilegiveis)
+      - key: CORS_ORIGINS
+        sync: false # ex.: ["https://studyxp.vercel.app"]
+      - key: WEB_URL
+        sync: false # ex.: https://studyxp.vercel.app
+      - key: EMAIL_PROVEDOR
+        value: resend
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_REMETENTE
+        sync: false # ex.: StudyXP <nao-responda@seu-dominio>
+      - key: PUSH_PROVEDOR
+        value: expo
+      - key: CRON_TOKEN
+        generateValue: true

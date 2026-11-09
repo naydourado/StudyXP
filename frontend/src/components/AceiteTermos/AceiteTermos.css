@@ -1,0 +1,66 @@
+.aceite-termos {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: #dfe8ff;
+}
+
+.aceite-card {
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.aceite-card h1 {
+  font-size: 24px;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.aceite-card ul {
+  margin: 14px 0 14px 22px;
+}
+
+.aceite-card a {
+  color: #4526c9;
+  font-weight: 700;
+}
+
+.aceite-nota {
+  font-size: 13px;
+  color: #4b5263;
+}
+
+.aceite-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.aceite-sair,
+.aceite-ok {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.aceite-sair {
+  background: #eef2ff;
+  color: #333;
+}
+
+.aceite-ok {
+  background: #4526c9;
+  color: #ffffff;
+}
+
+.aceite-ok:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}

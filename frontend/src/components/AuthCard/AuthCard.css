@@ -27,7 +27,7 @@
 
 .subtitle {
   font-size: 12px;
-  color: #777;
+  color: #5b6170;
   margin-bottom: 22px;
 }
 
@@ -69,7 +69,7 @@
 .auth-link {
   margin-top: 18px;
   font-size: 12px;
-  color: #777;
+  color: #5b6170;
 }
 
 .auth-link a {
@@ -86,5 +86,64 @@
 .success-message {
   color: #16a34a;
   font-size: 12px;
+  margin-top: 6px;
+}
+/* confirmacoes do cadastro (termos e maioridade) */
+.auth-card .auth-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #555;
+  cursor: pointer;
+}
+
+.auth-card .auth-check input {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #4526c9;
+}
+
+.auth-card .auth-check a {
+  color: #4526c9;
+  font-weight: 600;
+}
+
+.auth-card button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+@media (max-width: 900px) {
+  .auth-card {
+    width: min(440px, calc(100% - 32px));
+    padding: 28px 24px;
+  }
+}
+
+.auth-card .auth-esqueci {
+  align-self: flex-end;
+  font-size: 12px;
+  color: #4526c9;
+  font-weight: 600;
+}
+
+.auth-card .success-message {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* aviso curto de por que o dado e pedido (aviso em camadas - lgpd art. 9) */
+.auth-card .aviso-dados {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #4b5263;
+  background: #f4f7ff;
+  border-radius: 10px;
+  padding: 10px 12px;
   margin-top: 6px;
 }

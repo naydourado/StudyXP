@@ -1,84 +1,142 @@
 import { useEffect, useState } from "react";
-import { LuBell, LuShieldAlert } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { LuBell, LuShieldAlert, LuLock } from "react-icons/lu";
 
-import api from "../../services/api";
+import api, { mensagemDeErro } from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
 import Layout from "../../components/Layout/Layout";
+import NivelCard from "../../components/NivelCard/NivelCard";
 import "./Configuracoes.css";
 
+const OPCOES_NOTIFICACAO = [
+  {
+    campo: "lembrete_tarefas",
+    titulo: "Lembretes de tarefas",
+    descricao: "Receba avisos antes do prazo de cada tarefa.",
+  },
+  {
+    campo: "som_pomodoro",
+    titulo: "Pausa do pomodoro",
+    descricao: "Som ao finalizar uma sessão de foco.",
+  },
+  {
+    campo: "resumo_semanal",
+    titulo: "Resumo semanal",
+    descricao: "Receba seu progresso por e-mail todo domingo.",
+  },
+];
+
+function Interruptor({ ligado, aoAlternar, rotulo }) {
+  return (
+    <button
+      role="switch"
+      aria-checked={ligado}
+      aria-label={rotulo}
+      className={ligado ? "switch active" : "switch"}
+      onClick={aoAlternar}
+    >
+      <span></span>
+    </button>
+  );
+}
+
 function Configuracoes() {
-  const [dashboard, setDashboard] = useState(null);
-
-  const [lembretesTarefas, setLembretesTarefas] = useState(true);
-  const [pausaPomodoro, setPausaPomodoro] = useState(true);
-  const [resumoSemanal, setResumoSemanal] = useState(true);
-
   const navigate = useNavigate();
-  const [modalExcluir, setModalExcluir] = useState(false);
-  const [mensagemExcluir, setMensagemExcluir] = useState("");
-  const xpAtual = dashboard?.xp || 0;
-  const nivel = dashboard?.nivel || 1;
-  const xpProximoNivel = nivel * 100;
-  const progressoXp = Math.min((xpAtual / xpProximoNivel) * 100, 100);
+  const { encerrarLocalmente } = useAuth();
+
+  const [gamificacao, setGamificacao] = useState(null);
+  const [preferencias, setPreferencias] = useState(null);
+  const [humorAutorizado, setHumorAutorizado] = useState(false);
+  const [erroGeral, setErroGeral] = useState("");
+  const [mensagemDados, setMensagemDados] = useState("");
+
   const [abrirSenha, setAbrirSenha] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [mensagemSenha, setMensagemSenha] = useState("");
 
+  const [modalExcluir, setModalExcluir] = useState(false);
+  const [senhaExclusao, setSenhaExclusao] = useState("");
+  const [mensagemExcluir, setMensagemExcluir] = useState("");
 
   useEffect(() => {
-    async function carregarDashboard() {
-      try {
-        const response = await api.get("/dashboard");
-        setDashboard(response.data);
-      } catch (error) {
-        console.log(error.response?.data || error);
-      }
-    }
-
-    carregarDashboard();
+    Promise.all([api.get("/gamificacao/status"), api.get("/me/preferencias"), api.get("/me/consentimentos")])
+      .then(([status, prefs, consentimentos]) => {
+        setGamificacao(status.data);
+        setPreferencias(prefs.data);
+        setHumorAutorizado(consentimentos.data.humor);
+      })
+      .catch((error) => setErroGeral(mensagemDeErro(error, "Não foi possível carregar as configurações.")));
   }, []);
 
-  async function alterarSenha() {
+  async function alternarPreferencia(campo) {
+    const anteriores = preferencias;
+    const novas = { ...preferencias, [campo]: !preferencias[campo] };
+    setPreferencias(novas);
     try {
-      await api.put("/alterar-senha", {
-        senha_atual: senhaAtual,
-        nova_senha: novaSenha,
-      });
+      await api.put("/me/preferencias", novas);
+    } catch (error) {
+      setPreferencias(anteriores);
+      setErroGeral(mensagemDeErro(error, "Não foi possível salvar a preferência."));
+    }
+  }
 
-      setMensagemSenha(
-        "Senha alterada com sucesso!"
-      );
-
+  async function alterarSenha(e) {
+    e.preventDefault();
+    try {
+      await api.put("/me/senha", { senha_atual: senhaAtual, nova_senha: novaSenha });
+      setMensagemSenha("Senha alterada com sucesso!");
       setSenhaAtual("");
       setNovaSenha("");
-
       setTimeout(() => {
         setAbrirSenha(false);
         setMensagemSenha("");
       }, 1500);
-
     } catch (error) {
-      console.log(error.response?.data || error);
-
-      setMensagemSenha(
-        error.response?.data?.detail ||
-        "Erro ao alterar senha."
-      );
+      setMensagemSenha(mensagemDeErro(error, "Erro ao alterar senha."));
     }
   }
 
-  async function excluirConta() {
+  async function exportarDados() {
+    setMensagemDados("");
     try {
-      await api.delete("/perfil");
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("usuario");
-
-      navigate("/");
+      const resposta = await api.get("/me/exportar");
+      const arquivo = new Blob([JSON.stringify(resposta.data, null, 2)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(arquivo);
+      link.download = `studyxp-meus-dados-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      setMensagemDados("Arquivo com seus dados baixado.");
     } catch (error) {
-      console.log(error.response?.data || error);
-      setMensagemExcluir("Erro ao excluir conta.");
+      setMensagemDados(mensagemDeErro(error, "Não foi possível exportar os dados."));
+    }
+  }
+
+  async function alternarConsentimentoHumor() {
+    if (
+      humorAutorizado &&
+      !window.confirm("Revogar a autorização apaga todos os seus registros de humor. Continuar?")
+    ) {
+      return;
+    }
+    try {
+      const resposta = await api.put("/me/consentimentos", { humor: !humorAutorizado });
+      setHumorAutorizado(resposta.data.humor);
+      setMensagemDados(resposta.data.humor ? "Registro de humor autorizado." : "Autorização revogada e registros apagados.");
+    } catch (error) {
+      setMensagemDados(mensagemDeErro(error));
+    }
+  }
+
+  async function excluirConta(e) {
+    e.preventDefault();
+    try {
+      await api.delete("/me", { data: { senha: senhaExclusao } });
+      encerrarLocalmente();
+      navigate("/", { replace: true });
+    } catch (error) {
+      setMensagemExcluir(mensagemDeErro(error, "Erro ao excluir conta."));
     }
   }
 
@@ -91,68 +149,69 @@ function Configuracoes() {
             <p>Personalize sua experiência.</p>
           </div>
 
-          <div className="level-card">
-            <div className="level-info">
-              <strong>Nível {nivel}</strong>
-              <span>{xpAtual} / {xpProximoNivel} XP</span>
-            </div>
-
-            <div className="level-bar">
-              <div
-                className="level-progress"
-                style={{ width: `${progressoXp}%` }}
-              ></div>
-            </div>
-          </div>
+          <NivelCard gamificacao={gamificacao} />
         </header>
-      
+
+        {erroGeral && (
+          <p className="error-message" role="alert">
+            {erroGeral}
+          </p>
+        )}
+
         <section className="settings-card">
           <div className="settings-title">
             <LuBell />
             <h2>Notificações</h2>
           </div>
 
-          <div className="setting-row">
-            <div>
-              <h3>Lembretes de tarefas</h3>
-              <p>Receba avisos antes do prazo de cada tarefa.</p>
-            </div>
+          {preferencias &&
+            OPCOES_NOTIFICACAO.map((opcao) => (
+              <div className="setting-row" key={opcao.campo}>
+                <div>
+                  <h3>{opcao.titulo}</h3>
+                  <p>{opcao.descricao}</p>
+                </div>
 
-            <button
-              className={lembretesTarefas ? "switch active" : "switch"}
-              onClick={() => setLembretesTarefas(!lembretesTarefas)}
-            >
-              <span></span>
-            </button>
+                <Interruptor
+                  rotulo={opcao.titulo}
+                  ligado={preferencias[opcao.campo]}
+                  aoAlternar={() => alternarPreferencia(opcao.campo)}
+                />
+              </div>
+            ))}
+        </section>
+
+        <section className="settings-card">
+          <div className="settings-title">
+            <LuLock />
+            <h2>Privacidade e dados</h2>
           </div>
 
           <div className="setting-row">
             <div>
-              <h3>Pausa do pomodoro</h3>
-              <p>Som ao finalizar uma sessão de foco.</p>
+              <h3>Registro de humor</h3>
+              <p>Autorização para guardar seus registros de humor. Desligar apaga todos eles.</p>
             </div>
 
-            <button
-              className={pausaPomodoro ? "switch active" : "switch"}
-              onClick={() => setPausaPomodoro(!pausaPomodoro)}
-            >
-              <span></span>
-            </button>
+            <Interruptor rotulo="Registro de humor" ligado={humorAutorizado} aoAlternar={alternarConsentimentoHumor} />
           </div>
 
           <div className="setting-row">
             <div>
-              <h3>Resumo semanal</h3>
-              <p>Receba seu progresso por email todo domingo.</p>
+              <h3>Meus dados</h3>
+              <p>Baixe uma cópia de tudo que o StudyXP guarda sobre você (JSON).</p>
             </div>
 
-            <button
-              className={resumoSemanal ? "switch active" : "switch"}
-              onClick={() => setResumoSemanal(!resumoSemanal)}
-            >
-              <span></span>
+            <button className="password-btn" onClick={exportarDados}>
+              Exportar
             </button>
           </div>
+
+          {mensagemDados && <p className="config-mensagem">{mensagemDados}</p>}
+
+          <p className="config-links">
+            <Link to="/privacidade">Política de Privacidade</Link> · <Link to="/termos">Termos de Uso</Link>
+          </p>
         </section>
 
         <section className="account-card">
@@ -162,109 +221,91 @@ function Configuracoes() {
           </div>
 
           <div className="account-actions">
-            <button
-              className="password-btn"
-              onClick={() => setAbrirSenha(true)}
-            >
+            <button className="password-btn" onClick={() => setAbrirSenha(true)}>
               Alterar senha
             </button>
 
-            <button
-              className="delete-account-btn"
-              onClick={() => setModalExcluir(true)}
-            >
+            <button className="delete-account-btn" onClick={() => setModalExcluir(true)}>
               Excluir conta
             </button>
           </div>
 
-          {
-            abrirSenha && (
-              <div className="senha-modal">
-                <div className="senha-box">
-                  <h3>Alterar senha</h3>
+          {abrirSenha && (
+            <div className="senha-modal">
+              <form className="senha-box" onSubmit={alterarSenha}>
+                <h3>Alterar senha</h3>
 
-                  <input
-                    type="password"
-                    placeholder="Senha atual"
-                    value={senhaAtual}
-                    onChange={(e) =>
-                      setSenhaAtual(e.target.value)
-                    }
-                  />
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="Senha atual"
+                  aria-label="Senha atual"
+                  required
+                  value={senhaAtual}
+                  onChange={(e) => setSenhaAtual(e.target.value)}
+                />
 
-                  <input
-                    type="password"
-                    placeholder="Nova senha"
-                    value={novaSenha}
-                    onChange={(e) =>
-                      setNovaSenha(e.target.value)
-                    }
-                  />
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  placeholder="Nova senha (mínimo 8 caracteres)"
+                  aria-label="Nova senha"
+                  required
+                  minLength={8}
+                  value={novaSenha}
+                  onChange={(e) => setNovaSenha(e.target.value)}
+                />
 
-                  {mensagemSenha && (
-                    <p>{mensagemSenha}</p>
-                  )}
+                {mensagemSenha && <p>{mensagemSenha}</p>}
 
-                  <div className="senha-actions">
-                    <button
-                      className="cancel-btn"
-                      onClick={() =>
-                        setAbrirSenha(false)
-                      }
-                    >
-                      Cancelar
-                    </button>
-
-                    <button
-                      className="save-btn"
-                      onClick={alterarSenha}
-                    >
-                      Salvar
-                    </button>
-                  </div>
+                <div className="senha-actions">
+                  <button type="button" className="cancel-btn" onClick={() => setAbrirSenha(false)}>
+                    Cancelar
+                  </button>
+                  <button type="submit" className="save-btn">
+                    Salvar
+                  </button>
                 </div>
-              </div>
-            )
-          }
+              </form>
+            </div>
+          )}
         </section>
       </section>
 
       {modalExcluir && (
         <div className="delete-modal-overlay">
-          <div className="delete-modal">
-            <div className="delete-icon">
-              !
-            </div>
+          <form className="delete-modal" onSubmit={excluirConta} role="dialog" aria-modal="true">
+            <div className="delete-icon">!</div>
 
             <h2>Excluir conta?</h2>
 
             <p>
-              Essa ação não poderá ser desfeita. Todos os seus dados,
-              tarefas, registros de humor e sessões de foco serão removidos.
+              Essa ação não pode ser desfeita. Todos os seus dados, tarefas, registros de humor e sessões de foco
+              serão apagados.
             </p>
 
-            {mensagemExcluir && (
-              <span className="delete-message">
-                {mensagemExcluir}
-              </span>
-            )}
+            <input
+              type="password"
+              className="delete-senha"
+              autoComplete="current-password"
+              placeholder="Digite sua senha para confirmar"
+              aria-label="Senha"
+              required
+              value={senhaExclusao}
+              onChange={(e) => setSenhaExclusao(e.target.value)}
+            />
+
+            {mensagemExcluir && <span className="delete-message">{mensagemExcluir}</span>}
 
             <div className="delete-actions">
-              <button
-                className="cancel-delete-btn"
-                onClick={() => setModalExcluir(false)}
-              >
+              <button type="button" className="cancel-delete-btn" onClick={() => setModalExcluir(false)}>
                 Cancelar
               </button>
-
-              <button
-                className="confirm-delete-btn"
-                onClick={excluirConta}
-              >
+              <button type="submit" className="confirm-delete-btn">
                 Sim, excluir
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </Layout>

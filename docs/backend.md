@@ -2,268 +2,110 @@
 
 ## 1. Visão Geral
 
-O backend do StudyXP foi desenvolvido utilizando FastAPI, com o objetivo de fornecer uma API REST responsável pela comunicação entre o front-end e o banco de dados.
+O backend é uma API REST em FastAPI que atende o site (React) e o app (React Native). Ele concentra **todas** as regras de negócio: autenticação, tarefas, foco, humor e gamificação. Os clientes apenas exibem o que a API devolve — assim os números de XP, nível e ofensiva são os mesmos no web e no celular e não podem ser manipulados pelo cliente.
 
-A API gerencia autenticação, usuários, tarefas, progresso acadêmico, sessões de foco e registros de humor, permitindo que o sistema ofereça uma experiência gamificada de organização dos estudos.
+## 2. Tecnologias
 
----
-
-## 2. Tecnologias Utilizadas
-
-O backend utiliza as seguintes tecnologias:
-
-- Python
-- FastAPI
-- Uvicorn
-- MySQL
-- SQLAlchemy
-- PyMySQL
-- Pydantic
-- JWT (python-jose)
-- Passlib
-- Python-dotenv
-
-### Finalidade das principais tecnologias
-
-### FastAPI
-Framework responsável pela construção da API REST.
-
-### Uvicorn
-Servidor ASGI utilizado para executar o FastAPI localmente.
-
-### SQLAlchemy
-ORM responsável pelo mapeamento entre objetos Python e tabelas do banco de dados.
-
-### Pydantic
-Biblioteca utilizada para criação e validação dos schemas da API.
-
-### PyMySQL
-Driver responsável pela comunicação entre SQLAlchemy e MySQL.
-
-### JWT
-Utilizado para autenticação baseada em token.
-
-### Passlib
-Responsável pela criptografia (hash) das senhas dos usuários.
-
-### Python-dotenv
-Responsável pela leitura de variáveis de ambiente armazenadas no arquivo `.env`.
-
----
+| Tecnologia | Uso |
+|---|---|
+| FastAPI + Uvicorn | API REST e servidor ASGI |
+| SQLAlchemy 2 | ORM (mapeamento das tabelas) |
+| Alembic | Migrações versionadas do banco |
+| psycopg | Driver do PostgreSQL |
+| Pydantic + pydantic-settings | Validação de dados e das variáveis de ambiente |
+| PyJWT | Tokens de acesso (JWT) |
+| pwdlib (Argon2) | Hash de senhas |
+| cryptography (Fernet) | Criptografia das notas de humor |
+| SlowAPI | Limite de requisições (força bruta) |
+| pytest + httpx | Testes automatizados |
+| Ruff | Padrão de código |
 
 ## 3. Arquitetura
 
-O projeto utiliza arquitetura modular, separando responsabilidades por funcionalidades do sistema.
-
-Essa abordagem facilita manutenção, organização do código, divisão de tarefas entre integrantes e escalabilidade do projeto.
-
-Estrutura atual:
-
 ```txt
 app/
-├── main.py
-├── database.py
-├── models.py
-├── schemas.py
-├── security.py
-└── routes/
-    ├── usuarios.py
-    ├── tarefas.py
-    ├── dashboard.py
-    ├── humor.py
-    └── foco.py
+├── main.py            cria a aplicação, CORS, cabeçalhos de segurança, rotas
+├── core/
+│   ├── config.py      variáveis de ambiente (falha se faltar SECRET_KEY)
+│   ├── database.py    conexão e sessão do banco
+│   ├── seguranca.py   hash de senha, JWT, refresh tokens com rotação
+│   ├── deps.py        dependência get_usuario_atual
+│   ├── cripto.py      criptografia das notas de humor
+│   ├── erros.py       formato padrão de erro {detail, code}
+│   ├── rate_limit.py  limite de requisições
+│   └── tempo.py       datas em UTC e "dia" no fuso do usuário
+├── models/            tabelas (usuario, atividades, conta, enums)
+├── schemas/           entrada e saída validadas
+├── routers/           auth, conta (/me), tarefas, foco, humor, painel
+└── services/          gamificacao, ofensiva, conquistas, consentimentos
 ```
 
-### Responsabilidade dos arquivos principais
+As rotas são finas: validam a entrada e chamam os `services/`, onde ficam as regras testadas sem HTTP.
 
-### main.py
-Responsável por inicializar o FastAPI e registrar as rotas.
+## 4. Regras de Negócio
 
-### database.py
-Responsável pela conexão com o MySQL e gerenciamento das sessões do banco.
+### Cadastro e sessão
 
-### models.py
-Define as entidades e tabelas do banco de dados utilizando SQLAlchemy.
+- E-mail único (sem diferenciar maiúsculas). Senha com no mínimo 8 caracteres.
+- Cadastro exige aceite dos Termos/Política e declaração de maioridade; o aceite fica registrado (`consentimentos`).
+- Access token de 15 minutos + refresh token de 30 dias com rotação. Reutilizar um refresh token já trocado revoga toda a sessão (sinal de roubo), com tolerância de 10 s para duas abas renovando juntas.
+- Trocar a senha desconecta os outros dispositivos.
 
-### schemas.py
-Define e valida os dados que entram e saem da API utilizando Pydantic.
+### XP e nível
 
-### security.py
-Responsável por hash de senha, JWT e autenticação do usuário logado.
+| Ação | XP | Limite |
+|---|---|---|
+| Concluir tarefa baixa / média / alta | 20 / 50 / 80 | 15 tarefas pontuando por dia |
+| Minuto de sessão de foco | 1 | 240 XP de foco por dia |
+| Primeiro registro de humor do dia | 5 | 1 por dia |
 
-### routes/
-Pasta responsável por separar endpoints por módulos.
+- Reabrir uma tarefa estorna o XP que ela deu.
+- Para ir do nível *n* ao *n+1* são necessários 100 × *n* XP (XP total para o nível N = 50·N·(N−1)).
+- Todo ganho ou estorno fica no extrato `eventos_xp`.
 
----
+### Ofensiva
 
-## 4. Módulos do Sistema
-
-O backend foi dividido em módulos de responsabilidade.
-
-### Usuários e Autenticação
-
-Responsável por cadastro, login, geração de token JWT e identificação do usuário autenticado.
-
-Endpoints:
-
-```txt
-POST /usuarios
-POST /login
-GET /me
-```
-
----
-
-### Tarefas
-
-Responsável pelo gerenciamento das tarefas do estudante.
-
-Funcionalidades:
-
-- Criar tarefa
-- Listar tarefas
-- Editar tarefa
-- Concluir tarefa
-- Excluir tarefa
-- Conceder XP
-
-Endpoints:
-
-```txt
-POST /tarefas
-GET /tarefas
-PUT /tarefas/{tarefa_id}
-PUT /tarefas/{tarefa_id}/concluir
-DELETE /tarefas/{tarefa_id}
-```
-
----
-
-### Dashboard
-
-Responsável por retornar informações de progresso acadêmico do usuário.
-
-Endpoints:
-
-```txt
-GET /dashboard
-```
-
-O dashboard exibe:
-
-- XP
-- Nível
-- Progresso das tarefas
-- Tempo total de foco
-- Último humor registrado
-
----
-
-### Humor
-
-Responsável pelo registro e listagem de estados emocionais.
-
-Endpoints:
-
-```txt
-POST /humor
-GET /humor
-```
-
----
+- Dia ativo = concluiu ao menos uma tarefa ou uma sessão de foco completa, contado no **fuso do usuário** (padrão America/Sao_Paulo).
+- Login sozinho não conta.
 
 ### Foco
 
-Responsável pelo armazenamento das sessões de estudo e foco.
+- O servidor marca o início da sessão. Ao finalizar, confere o tempo decorrido: sessão completa conta para a ofensiva; encerrada antes conta só os minutos reais.
+- Pausas não dão XP. Iniciar uma sessão nova cancela a anterior que ficou aberta.
 
-Endpoints:
+### Humor
 
-```txt
-POST /foco
-GET /foco
+- Exige consentimento específico (LGPD art. 11). Revogar apaga todos os registros.
+- A observação é guardada criptografada.
+
+### Acesso aos dados
+
+- Toda consulta filtra pelo usuário do token; recurso de outra pessoa responde 404.
+
+### Tarefas periódicas
+
+O agendador do GitHub Actions chama `POST /api/v1/interno/jobs/...` de hora em hora (protegido por `X-Cron-Token`):
+
+| Job | O que faz |
+|---|---|
+| `lembretes` | Push na véspera do prazo (a partir das 18h) e no dia (a partir das 8h), no fuso do usuário, sem repetir |
+| `resumo-semanal` | E-mail aos domingos a partir das 18h para quem ligou o resumo (opt-in), uma vez por semana |
+| `limpeza` | Apaga logs de acesso com mais de 6 meses, tokens vencidos e cancela sessões de foco esquecidas |
+
+E-mail (Resend) e push (Expo) têm o modo `console`, que só escreve no log — usado em desenvolvimento e nos testes.
+
+## 5. Segurança
+
+- Senhas com Argon2; nada de senha ou token em log.
+- Rate limit em login, cadastro e refresh.
+- CORS restrito aos endereços configurados; cabeçalhos `nosniff`, `X-Frame-Options`, HSTS em produção.
+- Erro inesperado devolve mensagem genérica (sem stack trace). Swagger desligado em produção.
+- Dependências auditadas no CI (`pip-audit`).
+
+## 6. Testes
+
+```bash
+pytest
 ```
 
----
-
-## 5. Regras de Negócio
-
-O backend segue as seguintes regras:
-
-### Cadastro
-
-- O email deve ser único.
-- O usuário não pode ser criado com email duplicado.
-
-### Segurança
-
-- Senhas não são armazenadas em texto puro.
-- O sistema utiliza hash bcrypt através do Passlib.
-- O login retorna token JWT.
-- Apenas usuários autenticados podem acessar rotas protegidas.
-
-### Tarefas
-
-- Cada tarefa pertence exclusivamente ao usuário autenticado.
-- O usuário só pode editar ou excluir suas próprias tarefas.
-- Ao concluir uma tarefa, o sistema adiciona XP automaticamente.
-- O nível é calculado pela regra atual:
-
-```txt
-100 XP = +1 nível
-```
-
-### Dashboard
-
-- O progresso é calculado com base na proporção de tarefas concluídas.
-- O dashboard exibe XP, nível, progresso, tempo de foco e último humor registrado.
-
-### Humor e Foco
-
-- Os registros pertencem apenas ao usuário autenticado.
-- O usuário pode visualizar apenas seus próprios registros.
-
----
-
-## 6. Autenticação JWT
-
-O sistema utiliza autenticação baseada em JWT.
-
-Fluxo:
-
-```txt
-usuario realiza login
-↓
-backend valida email e senha
-↓
-gera token JWT
-↓
-front-end armazena token
-↓
-token e enviado no header Authorization
-↓
-rotas protegidas identificam usuario autenticado
-```
-
-Formato utilizado:
-
-```txt
-Authorization: Bearer TOKEN
-```
-
-As rotas protegidas utilizam:
-
-```python
-Depends(get_usuario_logado)
-```
-
-para identificar o usuário autenticado.
-
----
-
-## 7. Considerações Técnicas
-
-O backend foi estruturado priorizando modularização, segurança e reutilização de código.
-
-A utilização conjunta de FastAPI, SQLAlchemy, Pydantic e JWT permitiu a construção de uma API organizada, validada e preparada para integração com o front-end React.
-
-A arquitetura modular adotada facilita manutenção futura e permite expansão do sistema para funcionalidades adicionais, como conquistas, metas, ranking acadêmico e notificações.
+Os testes usam SQLite em memória e um relógio simulado (`tempo.agora`) para testar virada de dia, ofensiva e limites diários. No CI as migrações também são aplicadas num PostgreSQL 18 real.

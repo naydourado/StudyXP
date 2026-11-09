@@ -11,12 +11,14 @@ import {
   LuLogOut,
 } from "react-icons/lu";
 
-import Logo from "../../assets/StudyXP.png"
-import LogoXP from "../../assets/XP.png";
+import Logo from "../../assets/StudyXP.webp"
+import LogoXP from "../../assets/XP.webp";
+import { useAuth } from "../../contexts/AuthContext";
 import "./Layout.css";
 
 function Layout({ children }) {
   const navigate = useNavigate();
+  const { sair: encerrarSessao } = useAuth();
 
   const [sidebarFechada, setSidebarFechada] = useState(
     window.innerWidth <= 900
@@ -32,9 +34,8 @@ function Layout({ children }) {
     { path: "/configuracoes", label: "Configurações", icon: <LuSettings /> },
   ];
 
-  function sair() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+  async function sair() {
+    await encerrarSessao();
     navigate("/");
   }
 

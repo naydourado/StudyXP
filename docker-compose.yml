@@ -1,0 +1,40 @@
+# ambiente local completo: docker compose up --build
+#   api:     http://localhost:8000/docs
+#   adminer: http://localhost:8080 (sistema: PostgreSQL, servidor: postgres,
+#            usuario: studyxp, senha: studyxp, base: studyxp)
+# as chaves SECRET_KEY e HUMOR_ENC_KEY vem do backend/.env
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: studyxp
+      POSTGRES_USER: studyxp
+      POSTGRES_PASSWORD: studyxp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U studyxp -d studyxp"]
+      interval: 5s
+      retries: 20
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg://studyxp:studyxp@postgres:5432/studyxp
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_dados:

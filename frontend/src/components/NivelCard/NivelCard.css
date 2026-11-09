@@ -1,0 +1,41 @@
+.level-card {
+  width: 290px;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px 24px;
+}
+
+.level-card-vazio {
+  height: 72px;
+}
+
+.level-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.level-info strong {
+  font-size: 18px;
+}
+
+.level-info span {
+  font-size: 14px;
+  color: #555;
+}
+
+.level-bar {
+  height: 14px;
+  background: #c9d0da;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.level-progress {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2d159d, #63c7ec);
+  transition: width 0.4s ease;
+}
