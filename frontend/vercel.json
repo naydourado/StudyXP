@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/:caminho*", "destination": "https://TROCAR-PELO-ENDERECO-DA-API.onrender.com/api/:caminho*" },
+    { "source": "/api/:caminho*", "destination": "https://studyxp-api-xruj.onrender.com/api/:caminho*" },
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ],
   "headers": [
