@@ -1,5 +1,5 @@
 # dependencias de desenvolvimento e testes
 -r requirements.txt
 pytest==9.1.1
-ruff==0.17.1
+ruff==0.17.4
 pytest-cov==7.1.0
