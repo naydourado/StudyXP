@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "StudyXP Lite",
+    "slug": "studyxp-lite",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.studyxp.lite"
+    },
+    "android": {
+      "package": "com.studyxp.lite",
+      "adaptiveIcon": {
+        "backgroundColor": "#DCE6FF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
