@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -14,7 +13,7 @@ import {
 } from 'react-native';
 
 import { api, ErroApi } from './api';
-import { Cores } from './cores';
+import { Cores, Fontes } from './cores';
 
 type Prioridade = 'baixa' | 'media' | 'alta';
 
@@ -125,11 +124,20 @@ export default function TarefasTela({ nome, aoSair }: Props) {
     }
   }
 
-  // certinho: conclui no banco; a API responde com o XP ganho
-  async function concluir(tarefa: Tarefa) {
+  // certinho: conclui a tarefa; clicando de novo, reabre (para cliques por engano).
+  // a API devolve o XP ganho (ou estornado, negativo, ao reabrir)
+  async function alternarConclusao(tarefa: Tarefa) {
+    const reabrir = tarefa.status === 'concluida';
     try {
-      const resposta = await api<{ xp_ganho: number }>(`/tarefas/${tarefa.id}/concluir`, 'POST');
-      avisar(`+${resposta.xp_ganho} XP! "${tarefa.titulo}" concluída.`);
+      const resposta = await api<{ xp_ganho: number }>(
+        `/tarefas/${tarefa.id}/${reabrir ? 'reabrir' : 'concluir'}`,
+        'POST',
+      );
+      avisar(
+        reabrir
+          ? `"${tarefa.titulo}" voltou para pendente (${resposta.xp_ganho} XP).`
+          : `+${resposta.xp_ganho} XP! "${tarefa.titulo}" concluída.`,
+      );
       await carregar();
     } catch (e) {
       tratarErro(e);
@@ -159,21 +167,12 @@ export default function TarefasTela({ nome, aoSair }: Props) {
 
   return (
     <View style={estilos.tela}>
-      {/* cabecalho: logo, saudacao e botao de sair */}
-      <View style={estilos.topo}>
-        <Image source={require('../assets/logo-studyxp.webp')} style={estilos.logo} resizeMode="contain" />
+      {/* saudacao, entre o cabecalho e o formulario */}
+      <View>
         <Text style={estilos.ola} numberOfLines={1}>
-          Olá, {nome}!
+          Olá, {nome}! 👋
         </Text>
-        <Pressable
-          onPress={aoSair}
-          style={({ pressed }) => [estilos.botaoIcone, pressed && estilos.pressionado]}
-          accessibilityRole="button"
-          accessibilityLabel="Sair"
-          hitSlop={8}
-        >
-          <Ionicons name="log-out-outline" size={24} color={Cores.primaria} />
-        </Pressable>
+        <Text style={estilos.subtitulo}>Bora ganhar XP hoje?</Text>
       </View>
 
       {/* formulario: cria ou edita */}
@@ -275,30 +274,30 @@ export default function TarefasTela({ nome, aoSair }: Props) {
                 </View>
 
                 <View style={estilos.acoes}>
-                  {concluida ? (
-                    <View style={[estilos.acao, estilos.acaoFeita]} accessibilityLabel="Concluída">
-                      <Ionicons name="checkmark-done" size={20} color={Cores.sucesso} />
-                    </View>
-                  ) : (
-                    <>
-                      <Pressable
-                        style={({ pressed }) => [estilos.acao, estilos.acaoConcluir, pressed && estilos.pressionado]}
-                        onPress={() => concluir(item)}
-                        accessibilityRole="button"
-                        accessibilityLabel={`Concluir ${item.titulo}`}
-                      >
-                        <Ionicons name="checkmark" size={20} color="#fff" />
-                      </Pressable>
-                      <Pressable
-                        style={({ pressed }) => [estilos.acao, estilos.acaoEditar, pressed && estilos.pressionado]}
-                        onPress={() => comecarEdicao(item)}
-                        accessibilityRole="button"
-                        accessibilityLabel={`Editar ${item.titulo}`}
-                      >
-                        <Ionicons name="pencil" size={18} color={Cores.primaria} />
-                      </Pressable>
-                    </>
-                  )}
+                  {/* certinho: vazio = pendente; verde cheio = concluida (toque de novo reabre) */}
+                  <Pressable
+                    style={({ pressed }) => [
+                      estilos.acao,
+                      concluida ? estilos.acaoConcluida : estilos.acaoConcluir,
+                      pressed && estilos.pressionado,
+                    ]}
+                    onPress={() => alternarConclusao(item)}
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: concluida }}
+                    accessibilityLabel={concluida ? `Reabrir ${item.titulo}` : `Concluir ${item.titulo}`}
+                  >
+                    <Ionicons name="checkmark" size={20} color={concluida ? '#fff' : Cores.sucesso} />
+                  </Pressable>
+                  {!concluida ? (
+                    <Pressable
+                      style={({ pressed }) => [estilos.acao, estilos.acaoEditar, pressed && estilos.pressionado]}
+                      onPress={() => comecarEdicao(item)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Editar ${item.titulo}`}
+                    >
+                      <Ionicons name="pencil" size={18} color={Cores.primaria} />
+                    </Pressable>
+                  ) : null}
                   <Pressable
                     style={({ pressed }) => [estilos.acao, estilos.acaoExcluir, pressed && estilos.pressionado]}
                     onPress={() => excluir(item)}
@@ -319,18 +318,8 @@ export default function TarefasTela({ nome, aoSair }: Props) {
 
 const estilos = StyleSheet.create({
   tela: { flex: 1, padding: 16, gap: 12 },
-  topo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: Cores.card,
-    borderRadius: 18,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-  },
-  logo: { width: 40, height: 40 },
-  ola: { flex: 1, fontSize: 18, fontWeight: 'bold', color: Cores.texto },
-  botaoIcone: { padding: 8, borderRadius: 12, backgroundColor: Cores.campo },
+  ola: { fontSize: 24, fontFamily: Fontes.negrito, color: Cores.primaria },
+  subtitulo: { fontSize: 14, fontFamily: Fontes.regular, color: Cores.textoFraco, marginTop: -2 },
   pressionado: { opacity: 0.6 },
   card: { backgroundColor: Cores.card, borderRadius: 18, padding: 16, gap: 8 },
   tituloCard: { fontSize: 17, fontWeight: 'bold', color: Cores.texto, marginBottom: 2 },
@@ -376,8 +365,8 @@ const estilos = StyleSheet.create({
   detalhe: { color: Cores.textoFraco, marginTop: 4, fontSize: 13 },
   acoes: { flexDirection: 'row', gap: 6 },
   acao: { width: 38, height: 38, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  acaoConcluir: { backgroundColor: Cores.sucesso },
+  acaoConcluir: { backgroundColor: '#E7F6EC', borderWidth: 2, borderColor: Cores.sucesso },
+  acaoConcluida: { backgroundColor: Cores.sucesso, borderWidth: 2, borderColor: Cores.sucesso },
   acaoEditar: { backgroundColor: Cores.campo },
   acaoExcluir: { backgroundColor: '#FDECEC' },
-  acaoFeita: { backgroundColor: '#E7F6EC' },
 });

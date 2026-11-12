@@ -9,3 +9,11 @@ export const Cores = {
   sucesso: '#16A34A',
   erro: '#DC2626',
 };
+
+// fonte do tema (Poppins, a mesma do site); carregada no App.tsx
+export const Fontes = {
+  regular: 'Poppins_400Regular',
+  media: 'Poppins_500Medium',
+  seminegrito: 'Poppins_600SemiBold',
+  negrito: 'Poppins_700Bold',
+};
