@@ -1,6 +1,6 @@
 // tela de tarefas: lista (GET), cria (POST), edita (PATCH), exclui (DELETE) e conclui (POST)
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -50,6 +50,8 @@ export default function TarefasTela({ nome, aoSair }: Props) {
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
+  // para rolar de volta ao formulario quando clica no lapis
+  const lista = useRef<FlatList<Tarefa>>(null);
 
   // 401 = o token venceu: volta para o login. Outros erros: mostra a mensagem
   function tratarErro(e: unknown) {
@@ -96,6 +98,7 @@ export default function TarefasTela({ nome, aoSair }: Props) {
     setPrioridade(tarefa.prioridade);
     setErro('');
     setMensagem('');
+    lista.current?.scrollToOffset({ offset: 0, animated: true });
   }
 
   // cria (POST) ou salva a edicao (PATCH) e recarrega a lista
@@ -165,8 +168,9 @@ export default function TarefasTela({ nome, aoSair }: Props) {
     ]);
   }
 
-  return (
-    <View style={estilos.tela}>
+  // saudacao + formulario: vao no topo da lista e rolam junto com as tarefas
+  const topoDaLista = (
+    <View style={estilos.topoLista}>
       {/* saudacao, entre o cabecalho e o formulario */}
       <View>
         <Text style={estilos.ola} numberOfLines={1}>
@@ -247,77 +251,88 @@ export default function TarefasTela({ nome, aoSair }: Props) {
       </View>
 
       {mensagem ? <Text style={estilos.mensagem}>{mensagem}</Text> : null}
-
-      {carregando ? (
-        <ActivityIndicator color={Cores.primaria} style={{ marginTop: 24 }} />
-      ) : (
-        <FlatList
-          data={tarefas}
-          keyExtractor={(t) => String(t.id)}
-          contentContainerStyle={{ gap: 10, paddingBottom: 24 }}
-          ListEmptyComponent={<Text style={estilos.vazio}>Nenhuma tarefa ainda.</Text>}
-          renderItem={({ item }) => {
-            const concluida = item.status === 'concluida';
-            return (
-              <View style={[estilos.tarefa, editando?.id === item.id && estilos.tarefaEditando]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[estilos.tituloTarefa, concluida && estilos.riscado]}>{item.titulo}</Text>
-                  {item.descricao ? (
-                    <Text style={estilos.descricao} numberOfLines={2}>
-                      {item.descricao}
-                    </Text>
-                  ) : null}
-                  <Text style={estilos.detalhe}>
-                    {NOME_PRIORIDADE[item.prioridade]} ·{' '}
-                    {concluida ? `ganhou ${item.xp_concedido}` : item.xp_recompensa} XP
-                  </Text>
-                </View>
-
-                <View style={estilos.acoes}>
-                  {/* certinho: vazio = pendente; verde cheio = concluida (toque de novo reabre) */}
-                  <Pressable
-                    style={({ pressed }) => [
-                      estilos.acao,
-                      concluida ? estilos.acaoConcluida : estilos.acaoConcluir,
-                      pressed && estilos.pressionado,
-                    ]}
-                    onPress={() => alternarConclusao(item)}
-                    accessibilityRole="checkbox"
-                    accessibilityState={{ checked: concluida }}
-                    accessibilityLabel={concluida ? `Reabrir ${item.titulo}` : `Concluir ${item.titulo}`}
-                  >
-                    <Ionicons name="checkmark" size={20} color={concluida ? '#fff' : Cores.sucesso} />
-                  </Pressable>
-                  {!concluida ? (
-                    <Pressable
-                      style={({ pressed }) => [estilos.acao, estilos.acaoEditar, pressed && estilos.pressionado]}
-                      onPress={() => comecarEdicao(item)}
-                      accessibilityRole="button"
-                      accessibilityLabel={`Editar ${item.titulo}`}
-                    >
-                      <Ionicons name="pencil" size={18} color={Cores.primaria} />
-                    </Pressable>
-                  ) : null}
-                  <Pressable
-                    style={({ pressed }) => [estilos.acao, estilos.acaoExcluir, pressed && estilos.pressionado]}
-                    onPress={() => excluir(item)}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Excluir ${item.titulo}`}
-                  >
-                    <Ionicons name="trash-outline" size={18} color={Cores.erro} />
-                  </Pressable>
-                </View>
-              </View>
-            );
-          }}
-        />
-      )}
     </View>
+  );
+
+  // a tela inteira rola: saudacao, formulario e lista de tarefas
+  return (
+    <FlatList
+      ref={lista}
+      style={estilos.tela}
+      data={carregando ? [] : tarefas}
+      keyExtractor={(t) => String(t.id)}
+      contentContainerStyle={estilos.conteudoLista}
+      keyboardShouldPersistTaps="handled"
+      ListHeaderComponent={topoDaLista}
+      ListEmptyComponent={
+        carregando ? (
+          <ActivityIndicator color={Cores.primaria} style={{ marginTop: 24 }} />
+        ) : (
+          <Text style={estilos.vazio}>Nenhuma tarefa ainda.</Text>
+        )
+      }
+      renderItem={({ item }) => {
+        const concluida = item.status === 'concluida';
+        return (
+          <View style={[estilos.tarefa, editando?.id === item.id && estilos.tarefaEditando]}>
+            <View style={{ flex: 1 }}>
+              <Text style={[estilos.tituloTarefa, concluida && estilos.riscado]}>{item.titulo}</Text>
+              {item.descricao ? (
+                <Text style={estilos.descricao} numberOfLines={2}>
+                  {item.descricao}
+                </Text>
+              ) : null}
+              <Text style={estilos.detalhe}>
+                {NOME_PRIORIDADE[item.prioridade]} ·{' '}
+                {concluida ? `ganhou ${item.xp_concedido}` : item.xp_recompensa} XP
+              </Text>
+            </View>
+
+            <View style={estilos.acoes}>
+              {/* certinho: vazio = pendente; verde cheio = concluida (toque de novo reabre) */}
+              <Pressable
+                style={({ pressed }) => [
+                  estilos.acao,
+                  concluida ? estilos.acaoConcluida : estilos.acaoConcluir,
+                  pressed && estilos.pressionado,
+                ]}
+                onPress={() => alternarConclusao(item)}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: concluida }}
+                accessibilityLabel={concluida ? `Reabrir ${item.titulo}` : `Concluir ${item.titulo}`}
+              >
+                <Ionicons name="checkmark" size={20} color={concluida ? '#fff' : Cores.sucesso} />
+              </Pressable>
+              {!concluida ? (
+                <Pressable
+                  style={({ pressed }) => [estilos.acao, estilos.acaoEditar, pressed && estilos.pressionado]}
+                  onPress={() => comecarEdicao(item)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Editar ${item.titulo}`}
+                >
+                  <Ionicons name="pencil" size={18} color={Cores.primaria} />
+                </Pressable>
+              ) : null}
+              <Pressable
+                style={({ pressed }) => [estilos.acao, estilos.acaoExcluir, pressed && estilos.pressionado]}
+                onPress={() => excluir(item)}
+                accessibilityRole="button"
+                accessibilityLabel={`Excluir ${item.titulo}`}
+              >
+                <Ionicons name="trash-outline" size={18} color={Cores.erro} />
+              </Pressable>
+            </View>
+          </View>
+        );
+      }}
+    />
   );
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, padding: 16, gap: 12 },
+  tela: { flex: 1 },
+  conteudoLista: { padding: 16, paddingBottom: 24, gap: 10 },
+  topoLista: { gap: 12, marginBottom: 2 },
   ola: { fontSize: 24, fontFamily: Fontes.negrito, color: Cores.primaria },
   subtitulo: { fontSize: 14, fontFamily: Fontes.regular, color: Cores.textoFraco, marginTop: -2 },
   pressionado: { opacity: 0.6 },
