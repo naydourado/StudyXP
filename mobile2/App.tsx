@@ -34,7 +34,8 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: Cores.fundo }}>
+      {/* a borda de baixo fica com a navbar (AppLogado), que soma o espaco da barra do sistema */}
+      <SafeAreaView style={{ flex: 1, backgroundColor: Cores.fundo }} edges={nome ? ['top', 'left', 'right'] : undefined}>
         <StatusBar style="dark" />
         {!fontesProntas && !erroFontes ? (
           <ActivityIndicator color={Cores.primaria} style={{ flex: 1 }} />

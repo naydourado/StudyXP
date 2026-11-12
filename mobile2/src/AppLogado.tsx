@@ -2,6 +2,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ComponentProps, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Cores, Fontes } from './cores';
 import TarefasTela from './TarefasTela';
@@ -23,6 +24,8 @@ type Props = { nome: string; aoSair: () => void };
 export default function AppLogado({ nome, aoSair }: Props) {
   const [pagina, setPagina] = useState<Pagina>('tarefas');
   const atual = PAGINAS.find((p) => p.id === pagina)!;
+  // altura da barra de navegacao do celular (gestos / botoes do android)
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <View style={estilos.tela}>
@@ -55,24 +58,21 @@ export default function AppLogado({ nome, aoSair }: Props) {
       </View>
 
       {/* navbar */}
-      <View style={estilos.navbar}>
+      <View style={[estilos.navbar, { marginBottom: bottom + 10 }]}>
         {PAGINAS.map((p) => {
           const ativa = p.id === pagina;
           return (
             <Pressable
               key={p.id}
-              style={estilos.aba}
+              style={({ pressed }) => [estilos.aba, pressed && estilos.pressionado]}
+              hitSlop={6}
               onPress={() => setPagina(p.id)}
               accessibilityRole="tab"
               accessibilityState={{ selected: ativa }}
               accessibilityLabel={p.nome}
             >
               <View style={[estilos.iconeAba, ativa && estilos.iconeAbaAtivo]}>
-                <Ionicons
-                  name={ativa ? p.iconeAtivo : p.icone}
-                  size={22}
-                  color={ativa ? Cores.primaria : Cores.textoFraco}
-                />
+                <Ionicons name={ativa ? p.iconeAtivo : p.icone} size={24} color={ativa ? Cores.primaria : '#FFFFFF'} />
               </View>
               <Text style={[estilos.nomeAba, ativa && estilos.nomeAbaAtivo]}>{p.nome}</Text>
             </Pressable>
@@ -113,17 +113,23 @@ const estilos = StyleSheet.create({
     borderRadius: 999,
     overflow: 'hidden',
   },
+  // navbar roxa (cor do tema) para contrastar com o fundo azul claro
   navbar: {
     flexDirection: 'row',
-    backgroundColor: Cores.card,
-    paddingTop: 8,
-    paddingBottom: 6,
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
+    backgroundColor: Cores.primaria,
+    marginHorizontal: 12,
+    marginBottom: 10,
+    paddingVertical: 8,
+    borderRadius: 22,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
   },
-  aba: { flex: 1, alignItems: 'center', gap: 2 },
-  iconeAba: { paddingVertical: 4, paddingHorizontal: 16, borderRadius: 999 },
-  iconeAbaAtivo: { backgroundColor: Cores.campo },
-  nomeAba: { fontSize: 12, fontFamily: Fontes.media, color: Cores.textoFraco },
-  nomeAbaAtivo: { color: Cores.primaria, fontFamily: Fontes.seminegrito },
+  aba: { flex: 1, alignItems: 'center', gap: 3 },
+  iconeAba: { paddingVertical: 5, paddingHorizontal: 14, borderRadius: 999 },
+  iconeAbaAtivo: { backgroundColor: '#FFFFFF' },
+  nomeAba: { fontSize: 12, fontFamily: Fontes.media, color: '#FFFFFF' },
+  nomeAbaAtivo: { fontFamily: Fontes.negrito },
 });
