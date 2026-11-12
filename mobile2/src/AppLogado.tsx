@@ -23,7 +23,6 @@ type Props = { nome: string; aoSair: () => void };
 
 export default function AppLogado({ nome, aoSair }: Props) {
   const [pagina, setPagina] = useState<Pagina>('tarefas');
-  const atual = PAGINAS.find((p) => p.id === pagina)!;
   // altura da barra de navegacao do celular (gestos / botoes do android)
   const { bottom } = useSafeAreaInsets();
 
@@ -32,7 +31,7 @@ export default function AppLogado({ nome, aoSair }: Props) {
       {/* cabecalho: logo e botao de sair */}
       <View style={estilos.topo}>
         <Image source={require('../assets/logo-studyxp.webp')} style={estilos.logo} resizeMode="contain" />
-        <Text style={estilos.marca}>StudyXP</Text>
+        <View style={{ flex: 1 }} />
         <Pressable
           onPress={aoSair}
           style={({ pressed }) => [estilos.botaoIcone, pressed && estilos.pressionado]}
@@ -50,8 +49,6 @@ export default function AppLogado({ nome, aoSair }: Props) {
           <TarefasTela nome={nome} aoSair={aoSair} />
         ) : (
           <View style={estilos.construcao}>
-            <Ionicons name="construct-outline" size={48} color={Cores.primaria} />
-            <Text style={estilos.tituloConstrucao}>{atual.nome}</Text>
             <Text style={estilos.textoConstrucao}>Em construção</Text>
           </View>
         )}
@@ -97,22 +94,11 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 14,
   },
   logo: { width: 40, height: 40 },
-  marca: { flex: 1, fontSize: 20, fontFamily: Fontes.negrito, color: Cores.primaria },
   botaoIcone: { padding: 8, borderRadius: 12, backgroundColor: Cores.campo },
   pressionado: { opacity: 0.6 },
   conteudo: { flex: 1 },
-  construcao: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8, padding: 24 },
-  tituloConstrucao: { fontSize: 22, fontFamily: Fontes.negrito, color: Cores.texto },
-  textoConstrucao: {
-    fontSize: 15,
-    fontFamily: Fontes.seminegrito,
-    color: Cores.primaria,
-    backgroundColor: Cores.card,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    borderRadius: 999,
-    overflow: 'hidden',
-  },
+  construcao: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  textoConstrucao: { fontSize: 18, fontFamily: Fontes.media, color: Cores.textoFraco },
   // navbar roxa (cor do tema) para contrastar com o fundo azul claro
   navbar: {
     flexDirection: 'row',
