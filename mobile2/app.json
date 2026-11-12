@@ -20,6 +20,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e3229f11-aa53-4d5c-a097-e23d6262e9cc"
+      }
+    },
+    "owner": "gabrielrossik"
   }
 }
